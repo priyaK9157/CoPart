@@ -66,7 +66,7 @@ const Skill = () => {
           
               <View style={tw` flex flex-row max-w-[97%] gap-1  flex-wrap`}>
                   {
-                    SkillRequired.map((data,index)=>(
+                    SkillRequired.filter(skill=>!selectedButton.includes(skill.name)).map((data,index)=>(
                         <SkillButton key={index} text={data.name}  setSelectedButton={setSelectedButton}  selectedButton={selectedButton}  flag="false"/>
                     ))
                   }

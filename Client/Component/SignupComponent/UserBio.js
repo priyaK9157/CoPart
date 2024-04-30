@@ -19,9 +19,8 @@ const UserBio = () => {
    const [loading, setLoading] = useState(false);
    const navigate = useNavigation()
    const dispatch = useDispatch()
-   const { professionalRole, description, GithubLink, LinkedInLink } = useSelector((state => state.professionalRole));
+   const { professionalRole, GithubLink, LinkedInLink } = useSelector((state => state.professionalRole));
 
-   const updatedDesc = description.text
    const [fontsLoaded] = useFonts({
       MadimiOne: require("../../assets/Fonts/2V0YKIEADpA8U6RygDnZZFQoBoHMd2U.ttf"),
       TwinkleStar: require("../../assets/Fonts/X7nP4b87HvSqjb_WIi2yDCRwoQ_k7367_B-i2yQag0-mac3OryLMFuOLlNldbw.ttf")
@@ -46,7 +45,7 @@ const UserBio = () => {
       }
 
 
-      const updatedData = { ...data, Tech, proffesional_Role: professionalRole, user_Dec: updatedDesc, GithubLink: "https://github.com/" + GithubLink, LinkedinLink: "https://www.linkedin.com/" + LinkedInLink };
+      const updatedData = { ...data, Tech, proffesional_Role: professionalRole, user_Dec: value, GithubLink: "https://github.com/" + GithubLink, LinkedinLink: "https://www.linkedin.com/" + LinkedInLink };
       setLoading(true);
       const response = await signupHandler(updatedData);
       setLoading(false);

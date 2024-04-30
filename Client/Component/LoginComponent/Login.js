@@ -110,7 +110,7 @@ const Login = () => {
               <Text style={[tw`text-red-700  pb-2`, { fontFamily: "MadimiOne" }]}>Password Dosen't Match</Text>
             )
           }
-          {/spinner/}
+          {/*spinner*/}
           <Spinner
             visible={loading}
           />
@@ -173,6 +173,7 @@ const styles = StyleSheet.create({
     borderLeftWidth: 1,
     borderLeftColor: "#d1d5db",
     color: '#99A3BA',
+    borderRadius:10
   },
   emailSuffixFocused: {
     backgroundColor: '#15803d',

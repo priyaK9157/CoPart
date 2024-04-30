@@ -1,7 +1,6 @@
 const jwt = require("jsonwebtoken");
 
 exports.DecodeToken = async (req, res) => {
-    console.log("hiii")
     try {
         const { token } = req.body;
         try {

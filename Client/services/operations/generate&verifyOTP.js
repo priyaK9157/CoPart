@@ -3,9 +3,8 @@ import axios from 'axios'
 const { generateVerifyOTP } = require("../Api")
 
 export const generateOTP = async(email) => {
-    console.log("pandey")
     try{
-        console.log("gello")
+        console.log("",generateVerifyOTP.generateOTP)
         const response = await axios.post(generateVerifyOTP.generateOTP, {Email: email})
         console.log("OtpGenrateResponse",response)
         return response;

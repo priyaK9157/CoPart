@@ -105,6 +105,14 @@ exports.signup = async (req, res) => {
       proffesional_Role,
       user_Dec
     } = req.body;
+    console.log("data",Full_Name,
+    Tech,
+    Email,
+    GithubLink,
+    LinkedinLink,
+    password,
+    proffesional_Role,
+    user_Dec)
     if (
       !Full_Name ||
       !proffesional_Role ||
