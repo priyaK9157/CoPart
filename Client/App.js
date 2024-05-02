@@ -57,7 +57,7 @@ export default function App() {
       <NavigationContainer>
         <Stack.Navigator initialRouteName={initialRoute} screenOptions={{ headerShown: false }}>
           <Stack.Screen name="Profile" component={Profile}/>
-           {/* <Stack.Screen name="Signup" component={Signup}/>
+           <Stack.Screen name="Signup" component={Signup}/>
           <Stack.Screen name="Verification" component={Verification}/> 
           <Stack.Screen name="GetStarted" component={GetStarted}/>
           <Stack.Screen name="ProfessionalInfo" component={ProfessionalRole}/> 
@@ -74,7 +74,7 @@ export default function App() {
           <Stack.Screen name="Login" component={Login}/>
           <Stack.Screen name="JobPage" component={JobPage}/>
           <Stack.Screen name="JobDesc" component={JobDesc}/>
-          <Stack.Screen name='Index' component={Index}/> */}
+          <Stack.Screen name='Index' component={Index}/>
         </Stack.Navigator> 
       </NavigationContainer>
     </Provider>
