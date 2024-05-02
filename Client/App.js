@@ -21,7 +21,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { updateToken } from './reducers/signupReducer';
 import AppLoading from 'expo-app-loading';
 import { DecodedTokenHandler } from './services/operations/generate&verifyOTP';
-// import Profile from './Component/Pages/ProfilePage/Profile'
+import Toaster from './Component/Common/Toaster';
+import { ToastProvider } from 'react-native-toast-notifications';
+import Toast from 'react-native-toast-message';
 
 export default function App() {
   const Stack = createStackNavigator();
@@ -55,7 +57,7 @@ export default function App() {
   return (
     <Provider store={store}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName={"Signup"} screenOptions={{ headerShown: false }}>
+        <Stack.Navigator initialRouteName={initialRoute} screenOptions={{ headerShown: false }}>
           {/* <Stack.Screen name="Profile" component={Profile}/> */}
            <Stack.Screen name="Signup" component={Signup}/>
           <Stack.Screen name="Verification" component={Verification}/> 
@@ -75,8 +77,10 @@ export default function App() {
           <Stack.Screen name="JobPage" component={JobPage}/>
           <Stack.Screen name="JobDesc" component={JobDesc}/>
           <Stack.Screen name='Index' component={Index}/>
+          <Stack.Screen name='Toaster' component={Toaster}/>
         </Stack.Navigator> 
       </NavigationContainer>
-    </Provider>
+      <Toast/>
+     </Provider>
   );
 }

@@ -12,6 +12,7 @@ import jwt_decode from 'jwt-decode';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { DecodedTokenHandler } from "../../../services/operations/generate&verifyOTP";
 import Spinner from 'react-native-loading-spinner-overlay';
+import Toast from 'react-native-toast-message';
 
 const Conversation = () => {
   const { step, title, skills, BasicDetail } = useSelector((state) => state.createProject);
@@ -30,8 +31,12 @@ const Conversation = () => {
 
   async function PostAJob() {
     if (!description) {
-      Alert.alert('All Field Required');
-      return;
+      Toast.show({
+        type: 'error',
+        text1: 'Please Fill All The Details To Proceed',
+        position: 'bottom',
+      });
+        return;
     }
     const allKeys = await AsyncStorage.getAllKeys();
 
@@ -79,7 +84,7 @@ const Conversation = () => {
           <Text style={tw`text-xl font-bold`}>·</Text>Provide clear expectations for your tasks or objectives.
         </Text>
         <Text style={[tw`mt-7 text-xl`, { fontFamily: "MadimiOne" }]}>Describe what you need</Text>
-        {/spinner/}
+        {/* {/spinner/} */}
         <Spinner visible={loading} />
         <TextInput
           multiline

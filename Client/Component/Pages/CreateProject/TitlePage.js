@@ -7,6 +7,7 @@ import Footer from '../../Common/Footer'
 import Navbar from '../../Common/Navbar'
 import { updateStep, updateTitle } from '../../../reducers/CreateProject'
 import Spinner from 'react-native-loading-spinner-overlay'
+import Toast from 'react-native-toast-message'
 
 const TitlePage = () => {
     const { step } = useSelector((state) => state.createProject);
@@ -20,7 +21,12 @@ const TitlePage = () => {
 
     const setTitleState = () => {
         if (!data) {
-            Alert.alert('All Field Required');
+            Toast.show({
+                type: 'error',
+                text1: 'Please Fill All The Details To Proceed',
+                position: 'bottom',
+              });
+                return;
             return;
         }
         setLoading(true);

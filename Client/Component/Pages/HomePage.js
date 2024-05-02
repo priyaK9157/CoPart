@@ -9,6 +9,7 @@ import MainFooter from '../Common/MainFooter';
 import Swiper from "react-native-swiper"
 import { useNavigation } from '@react-navigation/native';
 import image1 from '../../assets/logo.jpg'
+import Toaster from '../Common/Toaster';
 
 const HomePage = () => {
 
