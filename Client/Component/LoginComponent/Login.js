@@ -25,6 +25,8 @@ const Login = () => {
   const navigation = useNavigation();
   const navigate = useNavigation();
 
+  const [isLoading, setIsLoading] = useState(true);
+
   const handleLogin = async () => {
     if (email.trim() === '' || password.trim() === '') {
       Alert.alert("Please enter both email and password");
@@ -36,6 +38,7 @@ const Login = () => {
     }
     setLoading(true);
     const response = await login(email + "@gmail.com", password);
+    console.log("response", response);
     if (response.data.message === "password Doesn't Matches") {
       setPasswordMatched(false);
       setLoading(false);
@@ -44,7 +47,7 @@ const Login = () => {
     }
     if (response.data.message === "Sign Up First") {
       setUserVerified(false);
-      setLoading(false);
+      // setLoading(false);
       Alert.alert("Sign Up First");
       return;
     }
@@ -52,7 +55,7 @@ const Login = () => {
     navigate.navigate?.('HomePage');
   };
 
-  const [isLoading, setIsLoading] = useState(true);
+ 
 
   useEffect(() => {
     const delay = setTimeout(() => {

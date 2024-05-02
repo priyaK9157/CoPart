@@ -1,44 +1,55 @@
-import React, { useEffect, useState } from 'react';
-import { ScrollView,View, Text, Linking } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { ScrollView, View, Text, Linking, Button } from 'react-native';
+import EditProfile from './EditComponent'; // Import the EditProfile component
 import { FindByEmail } from '../../../services/operations/ProfileHandler'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { DecodedTokenHandler } from '../../../services/operations/generate&verifyOTP';
 import tw from "twrnc";
 import { useFonts } from 'expo-font';
 import { Feather } from '@expo/vector-icons';
-import {findProjectById} from "../../../services/operations/ProjectsHandler"
+import { findProjectById } from "../../../services/operations/ProjectsHandler"
 
 const Profile = () => {
-    const [profile, setProfile] = useState(null); 
+    const [editing, setEditing] = useState(false);
+    const [profile, setProfile] = useState(null);
     const [projects, setProjects] = useState(null);
 
     useEffect(() => {
         findProfileByEmail();
     }, []);
 
-    useEffect(() => {
-        console.log("updated profile", profile);
-    }, [profile]);
-
     const findProfileByEmail = async () => {
         try {
             const Token = await AsyncStorage.getItem('token');
             const res = await DecodedTokenHandler(Token);
-            console.log("res", res)
             const email = res.data.Email;
             const response = await FindByEmail(email);
             const id = response.data.response._id;
-            console.log("id", id)
             const projects = await findProjectById(id);
-            console.log("projects", projects)
-            console.log("first", projects.data.project)
-            console.log("response", response)
             setProfile(response.data.response);
-            setProjects(projects.data.project)
+            setProjects(projects.data.project);
         } catch (error) {
             console.log("error", error);
         }
     }
+
+    const handleSaveProfile = async (updatedProfile) => {
+        // Implement logic to save updated profile
+        try {
+            // Make API call to update profile
+            // await updateProfile(updatedProfile);
+
+            // Assuming the updateProfile function returns the updated profile
+            setProfile(updatedProfile);
+            setEditing(false);
+        } catch (error) {
+            console.log("Error updating profile:", error);
+        }
+    };
+
+    const handleCancelEdit = () => {
+        setEditing(false);
+    };
 
     const openLink = (url) => {
         Linking.openURL(url).catch((err) => console.error('Failed to open URL:', err));
@@ -52,8 +63,8 @@ const Profile = () => {
 
     return (
         <ScrollView>
-            {fontsLoaded && profile ? ( 
-                    <View style={tw`pl-6 p-3`}>
+            {fontsLoaded && profile ? (
+                <View style={tw`pl-6 p-3`}>
                     <View style={tw`flex flex-row pt-20`}>
                         <Text style={[tw`text-3xl border border-gray-400 rounded-full pt-4 pb-4 px-4 text-green-500 `, { fontFamily: "MadimiOne" }]}>{profile.name.split(' ').map(name => name.charAt(0)).join('')}</Text>
                         <Text style={[tw`text-3xl border-t border-gray-400 pb-4 pt-4 `, { fontFamily: "MadimiOne" }]}>{profile.name}</Text>
@@ -77,9 +88,8 @@ const Profile = () => {
                         {projects ? (
                             projects.map((project, index) => (
                                 <View key={index}>
-                                <Text style={[tw`text-3xl pt-4 pb-4 px-4`, { fontFamily: "MadimiOne" }]}>{project.projectName}</Text>
+                                    <Text style={[tw`text-3xl pt-4 pb-4 px-4`, { fontFamily: "MadimiOne" }]}>{project.projectName}</Text>
                                     <Text style={[tw`text-base p-3`, { fontFamily: "TwinkleStar" }]}>{project.projectDescription}</Text>
-                                    
                                 </View>
                             ))
                         ) : (
@@ -87,17 +97,23 @@ const Profile = () => {
                         )}
                     </View>
 
-
-
                     <Text style={[tw`text-3xl pt-5 border-t border-gray-400 pb-4`, { fontFamily: "MadimiOne" }]}>Linked accounts</Text>
                     <View style={[tw`mr-8 border-b pb-5 border-gray-400`, { alignItems: 'center' }]}>
                         <Text style={tw`pl-3 text-green-800 text-base rounded-full border-solid border border-green-800 px-25 py-1 m-2 font-semibold`} onPress={() => openLink(profile.GithubLink)}><Feather style={tw`px-10`} name="github" size={20} color="green" />GitHub</Text>
                         <Text style={tw`pl-3 text-green-800 text-base rounded-full border-solid border border-green-800 px-24 py-1 m-2 font-semibold`} onPress={() => openLink(profile.LinkedIn)}><Feather style={tw`px-13`} name="linkedin" size={20} color="green" />LinkedIn</Text>
                     </View>
 
+                    <Button title="Edit Profile" onPress={() => setEditing(true)} />
                 </View>
             ) : (
-                <Text>Loading...</Text> 
+                <Text>Loading...</Text>
+            )}
+            {editing && (
+                <EditProfile
+                    profile={profile}
+                    onSave={handleSaveProfile}
+                    onCancel={handleCancelEdit}
+                />
             )}
         </ScrollView>
     );

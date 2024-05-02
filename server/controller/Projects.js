@@ -7,7 +7,7 @@ const Profile = require("../Models/Profile")
 async  function findProjects(req, res){
   try {
 
-    const response=await Project.find({})
+    const response=await Project.find({});
 
     return res.status(200).json({
       success: true,
@@ -215,6 +215,35 @@ async function AddProject(req, res){
 };
 
 
+async function findProjectById(req,res) {
+  console.log("1")
+  try {
+    const {id} = req.body
+    console.log("id", id)
+    const response = await Project.find({profileId:id});
+    console.log("response", response);
+
+    if (!response) {
+      return res.status(404).json({
+        success: false,
+        message: "Project not found"
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Project retrieved successfully",
+      project: response // Changed from "projects" to "project"
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "An error occurred",
+      error: error.message
+    });
+  }
+}
+
+
 // Export the function
 module.exports = {
   list,
@@ -222,8 +251,12 @@ module.exports = {
   findProjects,
   deleteProject,
   AddProject,
-  findProjectByProjectName
+  findProjectByProjectName,
+  findProjectById
 };
+
+
+
 
   
 

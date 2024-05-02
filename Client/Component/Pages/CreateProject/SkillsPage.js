@@ -9,7 +9,7 @@ import { ScrollView, TextInput } from 'react-native-gesture-handler'
 import SkillButton from '../../Common/SkillButton'
 import { SkillRequired } from '../../../ArrayUsable/SkillsRequired'
 import { updateSkills ,updateStep} from '../../../reducers/CreateProject'
-import Spinner from 'react-native-loading-spinner-overlay'
+// import Spinner from 'react-native-loading-spinner-overlay'
 
 const SkillsPage = () => {
     const { step, title } = useSelector((state) => state.createProject);
@@ -84,10 +84,10 @@ const SkillsPage = () => {
                     </View>
 
                 </ScrollView>
-                {/spinner/}
+                {/* {/spinner/}
                 <Spinner
                     visible={loading}
-                />
+                /> */}
             </View>
             <View style={{ borderTopWidth: 1, borderTopColor: '#E5E7EB',padding:10,display:'flex',flexDirection:'row', justifyContent:'space-between' }}>
                 <TouchableOpacity>

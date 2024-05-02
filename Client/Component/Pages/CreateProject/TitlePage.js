@@ -6,7 +6,7 @@ import { useFonts } from 'expo-font'
 import Footer from '../../Common/Footer'
 import Navbar from '../../Common/Navbar'
 import { updateStep, updateTitle } from '../../../reducers/CreateProject'
-import Spinner from 'react-native-loading-spinner-overlay'
+// import Spinner from 'react-native-loading-spinner-overlay'
 
 const TitlePage = () => {
     const { step } = useSelector((state) => state.createProject);
@@ -53,7 +53,7 @@ const TitlePage = () => {
                 <Text style={[tw` mt-2 text-[17px]`,{ fontFamily: "TwinkleStar" }]}>3. VoxPop: Revolutionizing Job Posting Engagement</Text>
             </View>
             {/*spinner*/}
-            <Spinner visible={loading}/>
+            {/* <Spinner visible={loading}/> */}
             <View style={tw` flex-1 justify-end `}>
                 <View style={{ borderTopWidth: 5, borderTopColor: '#E5E7EB',padding:17,display:'flex',flexDirection:'row-reverse', justifyContent:'space-between' }}>
                     <TouchableOpacity onPress={setTitleState}>

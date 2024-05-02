@@ -11,7 +11,7 @@ import { useNavigation } from '@react-navigation/native';
 import jwt_decode from 'jwt-decode';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { DecodedTokenHandler } from "../../../services/operations/generate&verifyOTP";
-import Spinner from 'react-native-loading-spinner-overlay';
+// import Spinner from 'react-native-loading-spinner-overlay';
 
 const Conversation = () => {
   const { step, title, skills, BasicDetail } = useSelector((state) => state.createProject);
@@ -79,8 +79,8 @@ const Conversation = () => {
           <Text style={tw`text-xl font-bold`}>·</Text>Provide clear expectations for your tasks or objectives.
         </Text>
         <Text style={[tw`mt-7 text-xl`, { fontFamily: "MadimiOne" }]}>Describe what you need</Text>
-        {/spinner/}
-        <Spinner visible={loading} />
+        {/* {/spinner/} */}
+        {/* <Spinner visible={loading} /> */}
         <TextInput
           multiline
           numberOfLines={13}

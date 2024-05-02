@@ -127,7 +127,7 @@ const ScopeView = () => {
             (chance == 2 && spanPeriod === "") && (
               <View>
                 <Text style={[tw`mt-7 text-xl`, { fontFamily: "MadimiOne" }]}>How Long will your project take?</Text>
-                {/6 months/}
+                {/* {/6 months/} */}
                 <View style={tw` mt-4 flex flex-row gap-3`}>
                   <CheckBox
                     value={spanPeriod === "7"}
@@ -139,7 +139,7 @@ const ScopeView = () => {
                   />
                   <Text style={[tw`text-lg`, { fontFamily: "MadimiOne" }]}>More Than 7 Month</Text>
                 </View>
-                {/3 months/}
+                {/* {/3 months/} */}
                 <View style={tw` mt-4 flex flex-row gap-3`}>
                   <CheckBox
                     value={spanPeriod === "3"}
@@ -151,7 +151,7 @@ const ScopeView = () => {
                   />
                   <Text style={[tw`text-lg`, { fontFamily: "MadimiOne" }]}>3 to 7 Month</Text>
                 </View>
-                {/2 month/}
+                {/* {/2 month/} */}
                 <View style={tw` mt-4 flex flex-row gap-3`}>
                   <CheckBox
                     value={spanPeriod === "1"}

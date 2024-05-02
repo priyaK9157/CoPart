@@ -40,3 +40,17 @@ export const createProjectHandler=async(data)=>{
         console.log("error", error);
     }
 }
+
+export const findProjectById = async(id) => {
+    console.log("handler serverice")
+       try{
+        console.log("hndi ser")
+            const response = await axios.post(projectsRoute.projectById, {id});
+            console.log("reshandler", response)
+            if(response){
+                return response;
+            }
+       }catch(error){
+        console.log("error", error);
+       }
+}
