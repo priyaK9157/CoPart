@@ -4,7 +4,7 @@ const { generateVerifyOTP } = require("../Api")
 
 export const generateOTP = async(email) => {
     try{
-        console.log("",generateVerifyOTP.generateOTP)
+        console.log("hii",generateVerifyOTP.generateOTP)
         const response = await axios.post(generateVerifyOTP.generateOTP, {Email: email})
         console.log("OtpGenrateResponse",response)
         return response;
@@ -24,6 +24,7 @@ export const verifyOTP = async(email, user_Otp) => {
 }
 
 export const login = async(email, password) => {
+    console.log("hiii");
     try{
         const response = await axios.post(generateVerifyOTP.login, {email,password})
         console.log("response", response);
@@ -36,9 +37,11 @@ export const login = async(email, password) => {
 export const DecodedTokenHandler=async(token)=>{
     console.log("aao")
     try{
+        console.log("andar", token)
     const response=await axios.post(generateVerifyOTP.DecodedApi,{token});
     console.log("serive ka response in token", response)
-    return response
+    return response;
+
     } catch(error){
          console.log("error",error)
     }

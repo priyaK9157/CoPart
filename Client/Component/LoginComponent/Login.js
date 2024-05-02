@@ -26,6 +26,8 @@ const Login = () => {
   const navigation = useNavigation();
   const navigate = useNavigation();
 
+  const [isLoading, setIsLoading] = useState(true);
+
   const handleLogin = async () => {
     if (email.trim() === '' || password.trim() === '') {
       Toast.show({
@@ -47,6 +49,7 @@ const Login = () => {
     }
     setLoading(true);
     const response = await login(email + "@gmail.com", password);
+    console.log("response", response);
     if (response.data.message === "password Doesn't Matches") {
       setPasswordMatched(false);
       setLoading(false);
@@ -73,7 +76,7 @@ const Login = () => {
     navigate.navigate?.('HomePage');
   };
 
-  const [isLoading, setIsLoading] = useState(true);
+ 
 
   useEffect(() => {
     const delay = setTimeout(() => {
