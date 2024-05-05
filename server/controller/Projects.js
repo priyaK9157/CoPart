@@ -107,7 +107,6 @@ async function deleteProject(req, res) {
         });
       }
 
-       console.log("hii", User);
       // Remove the project ID from the user's projects array
       User.projects = User.projects.filter((id) => id !== existingProject._id);
       await User.save();
@@ -200,7 +199,12 @@ async function AddProject(req, res){
     // Update the user's projects array with the new project ID
     user.Project.push(newProject._id);
     await user.save();
-
+    // create alert message
+    await Alert.create({
+      ProfileId:profile._id,
+      message:"Congratulations! 🚀 Your project has been created successfully! 🎉",
+      type:"info"
+    })
     return res.status(200).json({
       success: true,
       message: "Project added successfully",
@@ -216,7 +220,6 @@ async function AddProject(req, res){
 
 
 async function findProjectById(req,res) {
-  console.log("1")
   try {
     const {id} = req.body
     console.log("id", id)

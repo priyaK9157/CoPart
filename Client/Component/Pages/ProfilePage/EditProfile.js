@@ -7,7 +7,6 @@ const EditProfile = ({ profile, onSave, onCancel }) => {
     const [userBio, setUserBio] = useState(profile.User_Bio);
 
     const handleSave = () => {
-        // Prepare the updated profile object
         const updatedProfile = {
             ...profile,
             name,

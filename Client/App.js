@@ -24,6 +24,7 @@ import { DecodedTokenHandler } from './services/operations/generate&verifyOTP';
 import Toaster from './Component/Common/Toaster';
 import { ToastProvider } from 'react-native-toast-notifications';
 import Toast from 'react-native-toast-message';
+import Alert from './Component/Pages/Alert';
 
 export default function App() {
   const Stack = createStackNavigator();
@@ -57,7 +58,7 @@ export default function App() {
   return (
     <Provider store={store}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName={initialRoute} screenOptions={{ headerShown: false }}>
+        <Stack.Navigator initialRouteName={"Login"} screenOptions={{ headerShown: false }}>
           {/* <Stack.Screen name="Profile" component={Profile}/> */}
            <Stack.Screen name="Signup" component={Signup}/>
           <Stack.Screen name="Verification" component={Verification}/> 
@@ -77,7 +78,8 @@ export default function App() {
           <Stack.Screen name="JobPage" component={JobPage}/>
           <Stack.Screen name="JobDesc" component={JobDesc}/>
           <Stack.Screen name='Index' component={Index}/>
-          <Stack.Screen name='Toaster' component={Toaster}/>
+          <Stack.Screen name='Alert' component={Alert}/>
+          
         </Stack.Navigator> 
       </NavigationContainer>
       <Toast/>

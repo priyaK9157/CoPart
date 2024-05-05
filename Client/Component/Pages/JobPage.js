@@ -130,7 +130,7 @@ const JobPage = () => {
   const goToSavedField = async(_id) => {
 
     const Token  = await AsyncStorage.getItem('token');
-
+    console.log("toen",Token)
     const response = await DecodedTokenHandler(Token);
     const email = response.data.Email;
     console.log("email", email)
