@@ -145,10 +145,7 @@ const JobPage = () => {
         const Token  = await AsyncStorage.getItem('token');
         const response = await DecodedTokenHandler(Token);
         const email = response.data.Email;
-        console.log("email find ka", email)
-        console.log("email", email)
         const res = await getSavedProject(email);
-        console.log("response find ka ", res.data.response.SavedJobs)
         setSavedProject(res.data.response.SavedJobs)
       }catch(error){
         console.log("error", error);
@@ -158,7 +155,6 @@ const JobPage = () => {
   const findRecentJob = async() =>{
     try{
       const response = await getRecentProject();
-      console.log("recent project", response.data.response);
       setRecentProject(response.data.response);
     }catch(error){
       console.log("error", error);

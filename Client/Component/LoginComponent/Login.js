@@ -8,6 +8,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import signinImages from "../../assets/loginim.png";
 import Spinner from 'react-native-loading-spinner-overlay';
 import image1 from "../../assets/logo.jpg";
+import Toast from 'react-native-toast-message';
 
 const Login = () => {
   const [fontsLoaded] = useFonts({
@@ -29,12 +30,22 @@ const Login = () => {
 
   const handleLogin = async () => {
     if (email.trim() === '' || password.trim() === '') {
-      Alert.alert("Please enter both email and password");
-      return;
+      Toast.show({
+        type: 'error',
+        text1: 'Please enter both email and password',
+        position: 'bottom',
+      });
+        return;
     }
     if (email.toLowerCase().endsWith('@gmail.com')) {
-      Alert.alert("gmail.com will be added by default.");
-      return;
+        Toast.show({
+          type: 'error',
+          text1: 'gmail.com will be added by default.',
+          position: 'bottom',
+        });
+        
+        return;
+      
     }
     setLoading(true);
     const response = await login(email + "@gmail.com", password);
@@ -42,13 +53,23 @@ const Login = () => {
     if (response.data.message === "password Doesn't Matches") {
       setPasswordMatched(false);
       setLoading(false);
-      Alert.alert("Password Doesn't Matches");
+      Toast.show({
+        type: 'error',
+        text1: "Password Dosen't Matches",
+        position: 'bottom',
+      });
+      
       return;
     }
     if (response.data.message === "Sign Up First") {
       setUserVerified(false);
-      // setLoading(false);
-      Alert.alert("Sign Up First");
+      setLoading(false);
+      Toast.show({
+        type: 'error',
+        text1: 'signup First',
+        position: 'bottom',
+      });
+      
       return;
     }
     await AsyncStorage.setItem('token', response.data.token);

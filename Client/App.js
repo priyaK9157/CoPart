@@ -21,7 +21,16 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { updateToken } from './reducers/signupReducer';
 import AppLoading from 'expo-app-loading';
 import { DecodedTokenHandler } from './services/operations/generate&verifyOTP';
-import Profile from './Component/Pages/ProfilePage/Profile'
+import Toaster from './Component/Common/Toaster';
+import { ToastProvider } from 'react-native-toast-notifications';
+import Toast from 'react-native-toast-message';
+import Profile from '../Client/Component/Pages/ProfilePage/Profile'
+import EditProfessionalRole from "../Client/Component/Pages/ProfilePage/EditProfessionalRole"
+import EditUserBio from "../Client/Component/Pages/ProfilePage/EditUserBio"
+import EditSkills from "../Client/Component/Pages/ProfilePage/EditSkills"
+import EditLinkdedinAcc from "../Client/Component/Pages/ProfilePage/EditLinkdedinAcc"
+import EditGithubAcc from "../Client/Component/Pages/ProfilePage/EditGithubAcc"
+
 
 export default function App() {
   const Stack = createStackNavigator();
@@ -57,7 +66,18 @@ export default function App() {
       <NavigationContainer>
         <Stack.Navigator initialRouteName={initialRoute} screenOptions={{ headerShown: false }}>
           <Stack.Screen name="Profile" component={Profile}/>
-           <Stack.Screen name="Signup" component={Signup}/>
+          
+          <Stack.Screen name="EditProfessionalRole" component={EditProfessionalRole}/>
+          <Stack.Screen name="EditUserBio" component={EditUserBio}/>
+          <Stack.Screen name="EditSkills" component={EditSkills}/>
+          <Stack.Screen name="EditLinkdedinAcc" component={EditLinkdedinAcc}/>
+          <Stack.Screen name="EditGithubAcc" component={EditGithubAcc}/>
+
+          <Stack.Screen name='Index' component={Index}/>
+          
+               
+
+        {/* <Stack.Screen name="Signup" component={Signup}/>
           <Stack.Screen name="Verification" component={Verification}/> 
           <Stack.Screen name="GetStarted" component={GetStarted}/>
           <Stack.Screen name="ProfessionalInfo" component={ProfessionalRole}/> 
@@ -74,9 +94,10 @@ export default function App() {
           <Stack.Screen name="Login" component={Login}/>
           <Stack.Screen name="JobPage" component={JobPage}/>
           <Stack.Screen name="JobDesc" component={JobDesc}/>
-          <Stack.Screen name='Index' component={Index}/>
+          <Stack.Screen name='Index' component={Index}/> */}
         </Stack.Navigator> 
       </NavigationContainer>
-    </Provider>
+      <Toast/>
+     </Provider>
   );
 }

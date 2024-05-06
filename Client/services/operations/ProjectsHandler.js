@@ -54,3 +54,15 @@ export const findProjectById = async(id) => {
         console.log("error", error);
        }
 }
+
+export const UpdateProject = async(id) => {
+    try{
+        const response = await axios.post(projectsRoute.updatedProject, id);
+        console.log("response", response);
+        if(response){
+            return response;
+        }
+    }catch(error){
+        console.log("error", error);
+    }
+}

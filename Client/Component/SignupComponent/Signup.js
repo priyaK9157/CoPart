@@ -10,6 +10,12 @@ import { generateOTP } from '../../services/operations/generate&verifyOTP';
 import { useNavigation } from '@react-navigation/native'
 import CheckBox from 'expo-checkbox';
 import Spinner from 'react-native-loading-spinner-overlay';
+import googleImage from "../../assets/google.png"
+import { useToast } from "react-native-toast-notifications";
+import Toast from 'react-native-toast-message';
+
+
+
 
 
 const Signup = () => {
@@ -23,15 +29,17 @@ const Signup = () => {
   const [agreeTerms, setAgreeTerms] = useState(data.agreeTerms);
   const [isSelected, setSelection] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const[userInfo,setUserInfo]=useState();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigation();
   const dispatch = useDispatch();
+  const toast=useToast();
   const [fontsLoaded] = useFonts({
     MadimiOne: require("../../assets/Fonts/2V0YKIEADpA8U6RygDnZZFQoBoHMd2U.ttf"),
     TwinkleStar: require("../../assets/Fonts/X7nP4b87HvSqjb_WIi2yDCRwoQ_k7367_B-i2yQag0-mac3OryLMFuOLlNldbw.ttf")
   });
 
-
+  
 
   if (!fontsLoaded) {
     return null;
@@ -42,28 +50,29 @@ const Signup = () => {
   }
   
 
+  
+
 
   const handleSignup = async (e) => {
-
-    console.log("data k andar", Full_Name, email, password, country, agreeTerms)
     e.preventDefault()
           if (!firstName || !lastName || !email || !password || !country || !agreeTerms) {
-                Alert.alert(
-                  'All Field Required',
-                  '',
-                  [
-                    { text: 'OK', onPress: () => console.log('OK Pressed') }
-                  ],
-                  { cancelable: false }
-                );
+              Toast.show({
+                type: 'error',
+                text1: 'Please Fill All The Details To Proceed',
+                position: 'bottom',
+              });
                 return;
           }
       
           // Email validation regex
           const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
           if ((!emailRegex.test(email)) && (!data)) {
-            // setShowModal(true);
-             return;
+            Toast.show({
+              type: 'error',
+              text1: 'Please Gave a Vaild Email Address ',
+              position: 'bottom',
+            });
+              return;
           }
       
           const Full_Name = firstName + ' ' + lastName
@@ -78,20 +87,17 @@ const Signup = () => {
           
           
      
-     setLoading(true)
+      setLoading(true)
       const OtpGenrateResponse=await generateOTP(email ? email : data.Email)
-      console.log("OtpGenrateResponse", OtpGenrateResponse)
-     setLoading(false)
+      setLoading(false)
       if(OtpGenrateResponse.data.message==="Profile found"){
-        Alert.alert(
-          'User Already Registered',
-          'Please Try With Another Email',
-          [
-            { text: 'OK', onPress: () => console.log('OK Pressed') }
-          ],
-          { cancelable: false }
-        );
-        return;
+        Toast.show({
+          type: 'error',
+          text1: 'User Already Registered',
+          text2:"Please Use a Different Mail Id",
+          position: 'bottom',
+        });
+          return;
       }
      
       if((Object.keys(data).length === 0)===true){
@@ -109,8 +115,7 @@ const Signup = () => {
 
     setShowModal(false);
   }
- 
-
+    
 
   return (
     <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
@@ -119,14 +124,29 @@ const Signup = () => {
         <Image source={logo} style={[{ width: 150, height: 100, alignSelf: 'center', marginTop: 20 }]} />
         <Text style={{ fontSize: 40, fontWeight: 'semibold', marginBottom: 10, fontFamily: 'MadimiOne' }}>Sign up to find</Text>
         <Text style={{ fontSize: 40, fontWeight: 'semibold', marginBottom: 10, fontFamily: 'MadimiOne' }}>your love</Text>
+
+        {/*signup with google*/}
+        <View>
+               <TouchableOpacity style={tw`mt-4 rounded-full bg-[#38bdf8] p-2 w-[19rem]   flex flex-row  gap-3 items-center `} onPress={()=>{
+                   promptAsync();
+               }}>
+                          <Image source={googleImage} height={12} width={12} style={tw`-ml-1 h-[38px] w-[38px] rounded-full`}/>
+                          <Text style={tw` text-white p-1`}>Signup With Google</Text>
+               </TouchableOpacity>
+               <View style={tw` flex flex-row mt-3 items-center gap-2 mx-auto`}>
+                      <Text style={[tw` w-[8rem] h-[1px]`,{borderWidth: 1, borderColor: '#d4cdcd'}]}></Text>
+                      <Text style={tw` font-bold`}>Or</Text>
+                      <Text  style={[tw` w-[8rem] h-[1px]`,{borderWidth: 1, borderColor: '#d4cdcd'}]}></Text>
+               </View>
+        </View>
         <View style={{ width: '100%', marginBottom: 10 }}>
           <View style={{ flexDirection: 'row' }}>
 
             <View style={{ flexDirection: 'column', marginRight: 30 }}>
               <Text style={[tw`font-bold p-2 text-black`, { fontFamily: '', fontSize: 15 }]}>First Name</Text>
               <TextInput
-                style={tw` border border-gray-200 p-2 rounded-xl   w-[9rem]`}
-                placeholder="First name"
+                style={[tw` p-2 rounded-xl   w-[9rem]`,{ borderWidth: 2, borderColor: '#d4cdcd'}]}
+                placeholder=""
                 placeholderTextColor="gray"
                 value={firstName ? firstName :  data.Full_Name?.split('  ')[0]}
                 onChangeText={setFirstName}
@@ -140,8 +160,8 @@ const Signup = () => {
             <View style={{ flexDirection: 'column' }}>
               <Text style={[tw`font-bold p-2 text-black`, { fontFamily: '', fontSize: 15, }]}>Last Name</Text>
               <TextInput
-                style={tw` border border-gray-200 p-2 rounded-xl  w-[9rem]`}
-                placeholder="Last name"
+                style={[tw` p-2 rounded-xl  w-[9rem]`,{ borderWidth: 2, borderColor: '#d4cdcd'}]}
+                placeholder=""
                 placeholderTextColor="gray"
                 value={lastName ? lastName : data.Full_Name?.split('  ')[1]}
                 onChangeText={setLastName}
@@ -150,15 +170,15 @@ const Signup = () => {
           </View>
           <Text style={[tw`font-bold p-2 text-black`, { fontFamily: '', fontSize: 15, }]}>Email</Text>
           <TextInput
-            style={{ borderWidth: 1, borderColor: '#d4cdcd', paddingHorizontal: 8, marginBottom: 10, borderRadius: 8, height: 45, borderColor: '#d4cdcd' }}
-            placeholder="Email"
+            style={{ borderWidth: 2, borderColor: '#d4cdcd', paddingHorizontal: 8, marginBottom: 10, borderRadius: 8, height: 45, borderColor: '#d4cdcd' }}
+            placeholder=""
             placeholderTextColor="gray"
             value={email? email :data.Email}
             onChangeText={setEmail}
           />
           <Text style={[tw`font-bold p-2 text-black`, { fontFamily: '', fontSize: 15, }]}>Password</Text>
           <TextInput
-            style={tw` border border-gray-200 p-4 rounded-xl py-2`}
+            style={[tw` p-4 rounded-xl py-2`,{ borderWidth: 2, borderColor: '#d4cdcd'}]}
             placeholder="Password (8 or more characters)"
             placeholderTextColor="gray"
             value={password ? password : data.password}
@@ -166,26 +186,26 @@ const Signup = () => {
             secureTextEntry
           />
           <Text style={[tw`font-bold p-2 text-black`, { fontFamily: '', fontSize: 15, }]}>Country</Text>
-          <View style={tw` border border-gray-200  rounded-xl`}>
+          <View style={[tw` rounded-xl`,{ borderWidth: 2, borderColor: '#d4cdcd'}]}>
             <Picker
               selectedValue={country ? country : data.country}
-              style={{ height: 50, width: '100%', }}
+              style={[tw``,{ height: 40, width: '100%', }]}
               onValueChange={(itemValue, itemIndex) => setCountry(itemValue)}>
-              <Picker.Item label="India" value="India" />
+              <Picker.Item label="India" value="India" style={[tw` `,{ textAlign: 'center', textAlignVertical: 'center' }]} />
             </Picker>
           </View>
         </View>
-        <View style={tw`flex flex-row`}>
+        <View style={tw`flex flex-row mt-2 w-[94%] mx-auto `}>
           <CheckBox
             value={isSelected}
             onValueChange={(newValue) => {
               setSelection(newValue);
               setAgreeTerms(newValue);
             }}
-            style={styles.checkbox}
+            style={tw`mt-[2px]`}
           />
-          <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 5, marginTop: 7 }}>
-            <Text style={{ marginLeft: 8, fontSize: 15, fontFamily: 'TwinkleStar' }}>Yes, I understand and agree to the Upwork terms of Service, including the User Agreement and Privacy Policy.</Text>
+          <View style={{ flexDirection: 'row', alignItems: '', marginBottom: 5 }}>
+            <Text style={{ marginLeft: 8, fontSize: 15, fontFamily: 'TwinkleStar' }}>Yes, I understand and agree to the<Text style={tw` font-bold text-green-700 underline`}> CoPartner terms of Service</Text>, including the<Text style={tw` font-bold text-green-700 underline`}> User Agreement</Text> and <Text  style={tw` font-bold text-green-700 underline`}>Privacy Policy.</Text></Text>
           </View>
         </View>
         <View>
@@ -232,7 +252,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   checkbox: {
-    alignSelf: 'center',
+    // alignSelf: 'center',
   },
   label: {
     margin: 8,

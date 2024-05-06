@@ -11,6 +11,7 @@ import { signupHandler } from "../../services/operations/SignupHandler"
 import { useDispatch, useSelector } from 'react-redux';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { useNavigation } from '@react-navigation/native';
+import Toast from 'react-native-toast-message';
 
 
 const UserBio = () => {
@@ -32,11 +33,12 @@ const UserBio = () => {
 
    async function handlePress() {
       if (!value) {
-         Alert.alert(
-            'All Field Required',
-            '',
-            [{ text: 'OK', onPress: () => console.log('OK Pressed') }]
-         );
+         Toast.show({
+            type: 'error',
+            text1: 'Please Fill All The Details To Proceed',
+            position: 'bottom',
+          });
+            return;
          return;
       }
       dispatch(updateProfessionalDes(value));

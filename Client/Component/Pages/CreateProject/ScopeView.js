@@ -7,6 +7,7 @@ import { useFonts } from 'expo-font';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useDispatch } from 'react-redux';
 import { updateBasicDetail, updateStep } from '../../../reducers/CreateProject';
+import Toast from 'react-native-toast-message';
 
 const ScopeView = () => {
   const [projectLength, setProjectLength] = useState("");
@@ -23,8 +24,12 @@ const ScopeView = () => {
 
   async function setBasicDetailState() {
     if (!projectLength || !spanPeriod || !LevelExperience) {
-      Alert.alert('All Field Required');
-      return;
+      Toast.show({
+        type: 'error',
+        text1: 'Please Fill All The Details To Proceed',
+        position: 'bottom',
+      });
+        return;
     }
     const data = {
       projectLength,
@@ -127,7 +132,6 @@ const ScopeView = () => {
             (chance == 2 && spanPeriod === "") && (
               <View>
                 <Text style={[tw`mt-7 text-xl`, { fontFamily: "MadimiOne" }]}>How Long will your project take?</Text>
-                {/* {/6 months/} */}
                 <View style={tw` mt-4 flex flex-row gap-3`}>
                   <CheckBox
                     value={spanPeriod === "7"}
@@ -139,7 +143,6 @@ const ScopeView = () => {
                   />
                   <Text style={[tw`text-lg`, { fontFamily: "MadimiOne" }]}>More Than 7 Month</Text>
                 </View>
-                {/* {/3 months/} */}
                 <View style={tw` mt-4 flex flex-row gap-3`}>
                   <CheckBox
                     value={spanPeriod === "3"}

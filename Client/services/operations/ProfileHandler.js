@@ -2,10 +2,36 @@ import axios from 'axios';
 import {Profile} from '../Api';
 
 exports.FindByEmail = async (email) => {
+    console.log("pregnant",email)
     try{
-        console.log("email service k andar", email)
         const response = await axios.post(Profile.profileInfo, {Email:email});
-        console.log("response", response)
+        console.log("response", response);
+        if(response){
+            return response;
+        }
+    }catch(error){
+        console.log("error", error);
+    }
+}
+
+exports.UpdateProfile = async(data) => {
+    console.log("data",data)
+    try{
+        const response = await axios.put(Profile.UpdateProfile, data);
+        console.log("response hai baba abhi ka", response);
+        if(response){
+            return response;
+        }
+    }catch(error){
+        console.log("error", error);
+    }
+}
+
+exports.DeleteProfile = async(data) => {
+    console.log("data",data)
+    try{
+        const response = await axios.delete(Profile.DeleteProfile, data);
+        console.log("response hai baba abhi ka", response);
         if(response){
             return response;
         }
