@@ -1,6 +1,7 @@
 const Profile = require("../Models/Profile");
 const Project = require("../Models/Project");
 const User = require("../Models/User");
+const bcrypt = require("bcrypt");
 
 // update profile
 exports.updateProfile=async(req,res)=>{
@@ -29,6 +30,30 @@ exports.updateProfile=async(req,res)=>{
             message: "Error Occurred",
             error: error,
           });
+     }
+}
+
+exports.updatePassword=async(req,res)=>{
+     try{
+        const{newPassword,Email}=req.body;
+        console.log("req",req.body)
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        const user_Profile = await Profile.findOneAndUpdate(
+         { Email }, 
+         { $set: { password: hashedPassword } },
+         { new: true } 
+       );
+       console.log("user",user_Profile)
+       return res.status(200).json({
+         success:true,
+         message:"Password Update SuccessFully",
+         user_Profile
+       })
+     } catch(error){
+         return res.status(400).json({
+            message: "Error Occurred",
+            error: error,
+         });
      }
 }
 

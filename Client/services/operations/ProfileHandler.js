@@ -12,3 +12,15 @@ exports.FindByEmail = async (email) => {
         console.log("error", error);
     }
 }
+
+
+exports.UpdatePassword = async (Email,newPassword) => {
+    try{
+        const response = await axios.post(Profile.updatepassword, {Email,newPassword});
+        if(response){
+            return response;
+        }
+    }catch(error){
+        console.log("error", error);
+    }
+}

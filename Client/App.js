@@ -25,6 +25,9 @@ import Toaster from './Component/Common/Toaster';
 import { ToastProvider } from 'react-native-toast-notifications';
 import Toast from 'react-native-toast-message';
 import Alert from './Component/Pages/Alert';
+import UpdatePaswordStep1 from './Component/Pages/UpdatePassword/UpdatePaswordStep1';
+import updatepasswordstep2 from './Component/Pages/UpdatePassword/updatepasswordstep2';
+import updatepasswordstep3 from './Component/Pages/UpdatePassword/updatepasswordstep3';
 
 export default function App() {
   const Stack = createStackNavigator();
@@ -79,7 +82,9 @@ export default function App() {
           <Stack.Screen name="JobDesc" component={JobDesc}/>
           <Stack.Screen name='Index' component={Index}/>
           <Stack.Screen name='Alert' component={Alert}/>
-          
+          <Stack.Screen name='UpdatePasswordStep1' component={UpdatePaswordStep1}/>
+          <Stack.Screen name='updatepasswordstep2' component={updatepasswordstep2}/>
+          <Stack.Screen name='updatepasswordstep3' component={updatepasswordstep3}/>
         </Stack.Navigator> 
       </NavigationContainer>
       <Toast/>

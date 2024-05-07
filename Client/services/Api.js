@@ -13,7 +13,8 @@ exports.SignupRoute={
 }
 
 exports.Profile={
-    profileInfo:"http://192.168.146.20:4000/v1/FindByEmail"
+    profileInfo:"http://192.168.146.20:4000/v1/FindByEmail",
+    updatepassword:"http://192.168.146.20:4000/v1/updatePassword"
 }
 exports.projectsRoute={
     projectByName : "http://192.168.146.20:4000/v1/projects/findProjectByProjectName",

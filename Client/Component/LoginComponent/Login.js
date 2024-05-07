@@ -26,7 +26,6 @@ const Login = () => {
   const [passwordMatched, setPasswordMatched] = useState(true);
   const [userVerified, setUserVerified] = useState(true);
   const navigation = useNavigation();
-  const navigate = useNavigation();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
 
@@ -81,7 +80,7 @@ const Login = () => {
       return;
     }
     await AsyncStorage.setItem('token', response.data.token);
-    navigate.navigate?.('HomePage');
+    navigation.navigate?.('HomePage');
   };
 
  
@@ -145,8 +144,12 @@ const Login = () => {
               <Text style={[tw`text-red-700  pb-2`, { fontFamily: "MadimiOne" }]}>Password Dosen't Match</Text>
             )
           }
-
+        
+        <TouchableOpacity onPress={()=>{
+           navigation.navigate("UpdatePasswordStep1")
+        }}>
           <Text style={[tw`text-green-700 text-[16px]  pb-2`, { fontFamily: "MadimiOne" }]}>Forgot Password ?</Text>
+        </TouchableOpacity>
           {/*spinner*/}
           <Spinner
             visible={loading}
