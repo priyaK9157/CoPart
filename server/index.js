@@ -1,17 +1,21 @@
 const express = require("express");
 const app = express();
 const { dbConnect } = require("./config/DbConnection");
+
+// Routes
 const Profile = require("./Routes/Profile");
 const User = require("./Routes/User");
-const Project = require('./Routes/Project')
-const SavedAndRecentRoute=require("./Routes/SavedAndRecent")
+const Project = require('./Routes/Project');
+const SavedAndRecentRoute = require("./Routes/SavedAndRecent");
+const AlertRoute=require("./Routes/Alert")
+
 const cors = require("cors");
 const PORT = 4000;
 
 // Middleware
 app.use(express.json());
 
-// DB Connection
+// Database Connection
 dbConnect();
 
 // Enable CORS middleware
@@ -19,8 +23,7 @@ app.use(cors({
   origin: "*",
 }));
 
-
-// Routes
+// Default route
 app.get("/", (req, res) => {
   return res.json({
     success: true,
@@ -28,12 +31,14 @@ app.get("/", (req, res) => {
   });
 });
 
+// API Routes
 app.use("/v1", User);
 app.use("/v1", Profile);
-app.use("/v1",Project);
-app.use("/v1",SavedAndRecentRoute);
+app.use("/v1", Project);
+app.use("/v1", SavedAndRecentRoute);
+app.use("/v1",AlertRoute)
 
-
+// Start the server
 app.listen(PORT, () => {
-  console.log(`Your server is Up and Running on port number ${PORT}`);
+  console.log(`Your server is up and running on port number ${PORT}`);
 });

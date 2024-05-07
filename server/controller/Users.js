@@ -4,14 +4,14 @@ const bcrypt = require("bcrypt");
 const jwt=require("jsonwebtoken")
 const Otp =require("../Models/Otp")
 const otpTemplate=require("../Template/MailVerification.js")
-const nodemailerSender=require("../Utils/MailSender.js")
+const nodemailerSender=require("../Utils/MailSender.js");
+const Alert = require("../Models/Alert.js");
 // genrate a unique otp
 
 exports.GetOtp = async (req, res) => {
   
   try {
-    const { Email } = req.body;
-    console.log("Email",Email)
+    const { Email,purpose } = req.body;
     // Check if the email is provided
     if (!Email) {
       return res.status(400).json({
@@ -21,9 +21,9 @@ exports.GetOtp = async (req, res) => {
     }
 
     // Check if the profile with the provided email exists
+  
     const userProfile = await Profile.findOne({ Email });
-    console.log("user",userProfile)
-    if (userProfile) {
+    if (userProfile && purpose=="SignIn") {
       return res.status(200).json({
         success: false,
         message: "Profile found",
@@ -40,7 +40,6 @@ exports.GetOtp = async (req, res) => {
     });
 
     await otpDocument.save();
-      console.log("otp",otpDocument)
     // sending mail in email
     const sendingMail=await nodemailerSender(Email,"Email Verification Code",otpTemplate(generatedOtp))
     return res.status(200).json({
@@ -69,14 +68,12 @@ exports.verifyOtp = async (req, res) => {
            message: "No OTP found for the provided email.",
         });
      }
-     console.log("data", typeof( parseInt(user_Otp)),typeof(OtpModel.otp))
      if ( parseInt(user_Otp) !== OtpModel.otp) {
         return res.status(200).json({
            success: false,
            message: "OTP doesn't match.",
         });
      }
-    console.log("done")
      return res.status(200).json({
         success: true,
         matched:true,
@@ -105,6 +102,7 @@ exports.signup = async (req, res) => {
       proffesional_Role,
       user_Dec
     } = req.body;
+   
     if (
       !Full_Name ||
       !proffesional_Role ||
@@ -132,7 +130,6 @@ exports.signup = async (req, res) => {
     //converting values
     const techArray = Object.values(req.body.Tech);
     // Create a new profile
-    console.log("req",req.body,hashedPassword,techArray)
     const profile = await Profile.create({
       name: Full_Name,
       Email: Email,
@@ -145,7 +142,13 @@ exports.signup = async (req, res) => {
       SavedJobs:[]
     });
  
-    console.log("user",profile)
+   // create alert message
+     await Alert.create({
+      ProfileId:profile._id,
+      message:"Congratulations! 🎉 Your account has been created successfully. Welcome aboard! We're thrilled to have you join our community.",
+      type:"info"
+    })
+
     const user = await User.create({
       profileInf: profile._id,
       Project: [],
@@ -168,8 +171,6 @@ exports.signup = async (req, res) => {
 
 exports.login=async(req,res)=>{
   try{
-    
-      console.log("hello",req.body)
       const {email,password}=req.body;
       //validation
       if(!email || !password){
@@ -180,18 +181,18 @@ exports.login=async(req,res)=>{
       }
 
       //db check if user exit or not
-      const user=await Profile.findOne({Email:email})
-      if(!user){
+      const userProfile=await Profile.findOne({Email:email})
+      if(!userProfile){
          return res.status(200).json({
               success:false,
               message:"Sign Up First",
           })}
           
           //jwt token
-      if(await bcrypt.compare(password,user.password)){
+      if(await bcrypt.compare(password,userProfile.password)){
           const payload={
-              email:user.Email,
-              id:user._id,
+              email:userProfile.Email,
+              id:userProfile._id,
           }
 
 
@@ -199,16 +200,23 @@ exports.login=async(req,res)=>{
            
           });
 
-          user.token=token;
-          user.password=undefined;
+          userProfile.token=token;
+          userProfile.password=undefined;
           const option={
               expires: new Date(Date.now() + 3*24*60*60*1000),
               httpOnly:true,
           }
+          // create alert message
+          await Alert.create({
+            ProfileId:userProfile._id,
+            message:"Welcome back! 🌟 Your login was successful. If you didn't log in recently, please review your account activity. Your security is our priority!",
+            type:"info"
+          })
+
           res.cookie("token",token,option).status(200).json({
               success:true,
                token,
-               user,
+               userProfile,
                message:"Log In SuccessFully",
           })
       }

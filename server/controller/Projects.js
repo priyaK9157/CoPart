@@ -7,7 +7,7 @@ const Profile = require("../Models/Profile")
 async  function findProjects(req, res){
   try {
 
-    const response=await Project.find({})
+    const response=await Project.find({});
 
     return res.status(200).json({
       success: true,
@@ -107,7 +107,6 @@ async function deleteProject(req, res) {
         });
       }
 
-       console.log("hii", User);
       // Remove the project ID from the user's projects array
       User.projects = User.projects.filter((id) => id !== existingProject._id);
       await User.save();
@@ -200,7 +199,12 @@ async function AddProject(req, res){
     // Update the user's projects array with the new project ID
     user.Project.push(newProject._id);
     await user.save();
-
+    // create alert message
+    await Alert.create({
+      ProfileId:profile._id,
+      message:"Congratulations! 🚀 Your project has been created successfully! 🎉",
+      type:"info"
+    })
     return res.status(200).json({
       success: true,
       message: "Project added successfully",
@@ -215,6 +219,34 @@ async function AddProject(req, res){
 };
 
 
+async function findProjectById(req,res) {
+  try {
+    const {id} = req.body
+    console.log("id", id)
+    const response = await Project.find({profileId:id});
+    console.log("response", response);
+
+    if (!response) {
+      return res.status(404).json({
+        success: false,
+        message: "Project not found"
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Project retrieved successfully",
+      project: response // Changed from "projects" to "project"
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "An error occurred",
+      error: error.message
+    });
+  }
+}
+
+
 // Export the function
 module.exports = {
   list,
@@ -222,8 +254,12 @@ module.exports = {
   findProjects,
   deleteProject,
   AddProject,
-  findProjectByProjectName
+  findProjectByProjectName,
+  findProjectById
 };
+
+
+
 
   
 
