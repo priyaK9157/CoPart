@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Button, StyleSheet ,TouchableOpacity,Text} from 'react-native';
+import { View, Button, StyleSheet ,TouchableOpacity,Text, Image} from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateSelectedId } from '../../reducers/ButtonSlices';
 import { useNavigation } from '@react-navigation/native';
@@ -31,6 +31,9 @@ const MainFooter = () => {
                     onPress={() => handleButtonClick(item.index)}
                 >
                     <View style={index === selectedId ? tw`-mt-1 h-[5px] w-8 bg-green-700 rounded-xl` : tw`hidden`} />
+                     
+                    
+
                     {item.iconise ? (
                         <Ionicons
                             name={item.icon}
@@ -50,6 +53,7 @@ const MainFooter = () => {
                             color={index === selectedId ? "green" : "black"}
                         />
                     )}
+                 
                     <Text style={[tw`text-md`, { fontFamily: "MadimiOne", color: index === selectedId ? "green" : "black" }]}>{item.name}</Text>
                 </TouchableOpacity>
             ))}

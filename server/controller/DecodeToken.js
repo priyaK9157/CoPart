@@ -1,12 +1,10 @@
 const jwt = require("jsonwebtoken");
 
 exports.DecodeToken = async (req, res) => {
-    console.log("backend me")
     try {
         const { token } = req.body;
         try {
             const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-            console.log("decodedToken", decodedToken)
             return res.json({
                 Email: decodedToken.email
             });

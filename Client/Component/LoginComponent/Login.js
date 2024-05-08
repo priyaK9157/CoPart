@@ -9,6 +9,9 @@ import signinImages from "../../assets/loginim.png";
 import Spinner from 'react-native-loading-spinner-overlay';
 import image1 from "../../assets/logo.jpg";
 import Toast from 'react-native-toast-message';
+import googleImage from "../../assets/google.png"
+import { Feather } from '@expo/vector-icons';
+
 
 const Login = () => {
   const [fontsLoaded] = useFonts({
@@ -22,11 +25,16 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [passwordMatched, setPasswordMatched] = useState(true);
   const [userVerified, setUserVerified] = useState(true);
-  const [isPasswordFocused, setIsPasswordFocused] = useState(false);
   const navigation = useNavigation();
   const navigate = useNavigation();
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isPasswordFocused, setIsPasswordFocused] = useState(false);
 
   const [isLoading, setIsLoading] = useState(true);
+  
+  const togglePasswordVisibility = () => {
+    setIsPasswordVisible(!isPasswordVisible);
+  };
 
   const handleLogin = async () => {
     if (email.trim() === '' || password.trim() === '') {
@@ -117,23 +125,28 @@ const Login = () => {
               <Text style={[tw`text-red-700  pb-2`, { fontFamily: "MadimiOne" }]}>User Not Registered</Text>
             )
           }
+        
           <View style={styles.searchContainer}>
             <TextInput
               style={[styles.input, isPasswordFocused && styles.inputPasswordFocused]}
               placeholder="Password"
-              secureTextEntry={true}
+              secureTextEntry={!isPasswordVisible}
               value={password}
               onChangeText={setPassword}
               onFocus={() => setIsPasswordFocused(true)}
               onBlur={() => setIsPasswordFocused(false)}
             />
-
+                <TouchableOpacity style={styles.eyeIconContainer} onPress={togglePasswordVisibility}>
+                  <Feather name={isPasswordVisible ? "eye-off" : "eye"} size={24} color="#15803d" />
+                </TouchableOpacity>
           </View>
           {
             passwordMatched === false && (
               <Text style={[tw`text-red-700  pb-2`, { fontFamily: "MadimiOne" }]}>Password Dosen't Match</Text>
             )
           }
+
+          <Text style={[tw`text-green-700 text-[16px]  pb-2`, { fontFamily: "MadimiOne" }]}>Forgot Password ?</Text>
           {/*spinner*/}
           <Spinner
             visible={loading}
@@ -147,6 +160,24 @@ const Login = () => {
         }}>
           <Text style={[tw` mt-4 mx-auto text-[16px] text-green-600`, { fontFamily: "MadimiOne" }]}>Don't Have an account? Sign up</Text>
         </TouchableOpacity>
+
+        {/*signup with google*/}
+        <View>
+                
+                 <View style={tw` flex flex-row mt-3 items-center gap-2 mx-auto`}>
+                      <Text style={[tw` w-[8rem] h-[1px]`,{borderWidth: 1, borderColor: '#d4cdcd'}]}></Text>
+                      <Text style={tw` font-bold`}>Or</Text>
+                      <Text  style={[tw` w-[8rem] h-[1px]`,{borderWidth: 1, borderColor: '#d4cdcd'}]}></Text>
+               </View>
+
+               <TouchableOpacity style={tw`mt-4 rounded-full bg-[#38bdf8] p-2 w-[19rem]   flex flex-row  gap-3 items-center `} onPress={()=>{
+                   
+               }}>
+                          <Image source={googleImage} height={12} width={12} style={tw`-ml-1 h-[38px] w-[38px] rounded-full`}/>
+                          <Text style={tw` text-white p-1`}>Login With Google</Text>
+               </TouchableOpacity>
+              
+        </View>
       </View>
     </View>
   );
@@ -172,7 +203,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   searchContainerFocused: {
-    borderColor: '#15803d', // Change border color when focused
+    borderColor: '#15803d',
+  },
+  eyeIconContainer: {
+    left: -16,
   },
   input: {
     flex: 1,
