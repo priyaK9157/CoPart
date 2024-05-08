@@ -1,6 +1,6 @@
 import React, { useState, useEffect} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { View, TextInput, Text, TouchableOpacity, ScrollView ,Image} from 'react-native';
+import { View, TextInput, Text, TouchableOpacity, ScrollView ,Image,StyleSheet} from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import MainHeader from '../Common/MainHeader';
 import tw from 'twrnc';
@@ -14,7 +14,7 @@ import { updateDesc } from '../../reducers/signupReducer';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { Entypo,FontAwesome6 } from '@expo/vector-icons';
-import { getSavedProject, getRecentProject, addSavedProject } from '../../services/operations/savedProjectHandler';
+import { getSavedProject, getRecentProject, addSavedProject, RemoveSavedProject } from '../../services/operations/savedProjectHandler';
 import TimeAgoText from './TimeAgoText'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {DecodedTokenHandler} from '../../services/operations/generate&verifyOTP'
@@ -35,13 +35,16 @@ const JobPage = () => {
   const [jobs, setJobs] = useState([]);
   const [savedProject, setSavedProject] = useState([]);
   const [recentProject, setRecentProject] = useState([])
+  const [isSaved, setIsSaved] = useState(false);
+  const[UserMail,setUserMail]=useState()
+  const{selectedValue}=useSelector((state)=>state.SearchData)
   const [expandedDescriptionIndex, setExpandedDescriptionIndex] = useState(null);
+  const [filteredProjects, setFilteredProjects] = useState([]);
   
   const SavedProject = async () => {
     try {
-      const responseEmail = await DecodedTokenHandler(Token);
-      const response = await getSavedProject(responseEmail.data.Email);
-      console.log("response", response);
+       
+      const response = await getSavedProject(UserMail);
       setJobs(response.data.response);
     } catch (error) {
       console.log("error", error.message);
@@ -51,7 +54,6 @@ const JobPage = () => {
     try {
       console.log("addSavedJobs")
       const response = await addSavedProject();
-      console.log("response", response.data.response);
       setJobs(response.data.response);
     } catch (error) {
       console.log("error", error.message);
@@ -110,13 +112,48 @@ const JobPage = () => {
     setState(variable?.data?.projects);
   };
 
+  const GetUserEmail=async()=>{
+    const Token  = await AsyncStorage.getItem('token');
+    const response = await DecodedTokenHandler(Token);
+    const email = response.data.Email;
+    setUserMail(email);
+  }
+
+
+
+  // Function to highlight the search keyword in a given text
+  const filterProjects = () => {
+    const filtered = jobs.filter((project) => {
+      const projectName = project.projectName.toLowerCase();
+      const projectDesc = project.projectDescription.toLowerCase();
+      const keyword = selectedValue.toLowerCase();
+      return projectName.includes(keyword) || projectDesc.includes(keyword);
+    });
+    console.log("filtered",filtered)
+    setFilteredProjects(filtered);
+  };
+ 
+  const highlightKeyword = (text, keyword) => {
+    if (!keyword) return <Text>{text}</Text>;
+
+    const regex = new RegExp(`(${keyword})`, 'gi');
+    const parts = text.split(regex);
+    return parts.map((part, index) => (
+        regex.test(part.toLowerCase()) ? 
+        <Text key={index} style={{ backgroundColor: 'yellow' }}>{part}</Text> : 
+        <Text key={index}>{part}</Text>
+    ));
+};
+
+
   useEffect(() => {
     func();
+    GetUserEmail();
   }, []);
 
   useEffect(() => {
-   
-  }, [state]);
+    filterProjects();
+  }, [state,selectedValue]);
 
   const [fontsLoaded] = useFonts({
     MadimiOne: require("../../assets/Fonts/2V0YKIEADpA8U6RygDnZZFQoBoHMd2U.ttf"),
@@ -129,23 +166,15 @@ const JobPage = () => {
 
   const goToSavedField = async(_id) => {
 
-    const Token  = await AsyncStorage.getItem('token');
-    console.log("toen",Token)
-    const response = await DecodedTokenHandler(Token);
-    const email = response.data.Email;
-    console.log("email", email)
-    const res = await addSavedProject(email, _id)
-    console.log("response addsaved ka", res)
+    const res = await addSavedProject(UserMail, _id)
+
 
   }
    
 
   const findSavedJob = async() => {
       try{
-        const Token  = await AsyncStorage.getItem('token');
-        const response = await DecodedTokenHandler(Token);
-        const email = response.data.Email;
-        const res = await getSavedProject(email);
+        const res = await getSavedProject(UserMail);
         setSavedProject(res.data.response.SavedJobs)
       }catch(error){
         console.log("error", error);
@@ -160,6 +189,24 @@ const JobPage = () => {
       console.log("error", error);
     }
   }
+
+  
+  async function handleSavedProject(projectId){
+    if(isSaved===false){
+       await addSavedProject(UserMail,projectId)
+       setIsSaved(projectId)
+       // popup project saved
+    } else{
+        await RemoveSavedProject(UserMail,projectId)
+        setIsSaved(false)
+    }
+} 
+
+const updateSavedProjects = (projectId) => {
+  const updatedProjects = state.filter(project => project._id !== projectId);
+  console.log("updated",updatedProjects)
+  setState(updatedProjects);
+}
 
   useEffect(()=>{
     findRecentJob();
@@ -181,6 +228,7 @@ const JobPage = () => {
             <AntDesign name="search1" size={24} color="black" style={tw`absolute left-5 top-2`} />
         <TouchableOpacity >
             <TextInput
+                value={selectedValue}
                 placeholder='Search for Projects...'
                 style={[tw`relative rounded-3xl border-[3px] p-1 pl-12 w-[16rem] border-gray-300`, { fontFamily: 'MadimiOne' }]}
             />
@@ -189,13 +237,13 @@ const JobPage = () => {
           <MaterialCommunityIcons name="heart-circle-outline" size={24} color="black" style={[tw`flex items-center text-5xl text-green-600`, {}]} />
       </View>
 
-          <View style={[tw`mx-4 mt-5`]} />
-          <View style={[tw`flex border-b-2 border-slate-300 flex-row gap-5 mx-auto  ml-3 mt-3 p-3 w-[100%]`, {}]}>
-            <TouchableOpacity onPress={toggleMyFeed} style={[myFeed && tw`border-b-2 border-green-700`]}>
-              <Text style={[tw`text-lg text-gray-400 font-semibold pb-1`, myFeed && tw`text-semibold text-green-600`]}>{'My Feed'}</Text>
+          <View style={[tw` mt-5`]} />
+          <View style={[tw`flex border-b-[2px] border-slate-200 p-3  flex-row gap-5 mx-auto  ml-3 mt-3 `, {}]}>
+            <TouchableOpacity onPress={toggleMyFeed} style={[myFeed && tw`border-b-2 border-green-700 `]}>
+              <Text style={[tw`text-lg text-gray-400 font-semibold `, myFeed && tw`text-semibold text-green-600`]}>{'My Feed'}</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={toggleMatches} style={[matches && tw`border-b-2 border-green-700`]}>
-              <Text style={[tw`text-lg font-semibold text-gray-400 pb-1`, matches && tw`text-green-600 font-semibold`]}>{'Saved Project'}</Text>
+              <Text style={[tw`text-lg font-semibold text-gray-400 `, matches && tw`text-green-600 font-semibold`]}>{'Saved Project'}</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={toggleRecent} style={[recent && tw`border-b-2 border-green-700`]}>
               <Text style={[tw`text-lg font-semibold text-gray-400 pb-1`, recent && tw`text-green-600 font-semibold`]}>{'Most Recent'}</Text>
@@ -203,33 +251,34 @@ const JobPage = () => {
           </View>
 
           {myFeed && (
-            <View style={[tw`mt-2 pl-4 flex flex-row justify-between mb-20`, { width: '100%' }]}>
+            <View style={[tw`mt-2 w-12/12 mx-auto flex flex-row justify-between mb-20`, { width: '100%' }]}>
 
               <View style={[tw` p-3`]}>
-                {state?.map((project, index) => (
+                { (filteredProjects ? filteredProjects : state)?.map((project, index) => (
                     <View key={index} style={tw`  w-[100%] mt-3 pb-6  border-b-2 border-gray-200 `}>
                     <TouchableOpacity onPress={() => handleDesc(project.projectName, project.projectDescription,project.Skill)}>
                     <TimeAgoText createdAt={project.createdAt} />
                          <View style={tw`  flex flex-row justify-between `}>
-                            <Text style={[tw`text-lg font-bold text-[#334155]`]}>{project.projectName}</Text>
-                            <View style={tw` flex flex-row gap-4 `}>
+                            <Text style={[tw`text-lg font-bold text-[#334155] max-w-[70%]`]}
+                            > {highlightKeyword(project.projectName, selectedValue)}</Text>
+                            <View style={tw` flex flex-row gap-4 -mt-3 `}>
+                          <TouchableOpacity onPress={()=>{
+                             updateSavedProjects(project._id)
+                          }}  style={tw`border-[4px] border-slate-300 h-[3rem]  p-[7px] rounded-full`}>
                              <Feather name="thumbs-down" size={24} color="#15803d" />
-                             <AntDesign
-                                name="hearto"
-                                size={24}
-                                color="#15803d"
-                                onPress={() => {
-                                  const id = project._id;    
-                                  goToSavedField(id); 
-                                }}
-                              />
+                          </TouchableOpacity>
+                          <TouchableOpacity onPress={()=>handleSavedProject(project._id)} style={tw` border-[4px] border-slate-300 h-[3rem] p-[7px] rounded-full`}>
+                                {isSaved!=false && isSaved===project._id  ? <AntDesign name="heart" size={24} color="#15803d" /> :  <AntDesign name="hearto" size={24} color="#15803d"/>}
+                           </TouchableOpacity> 
                           </View>
                          </View>
                         <Text style={[tw`pt-3 text-gray-500`]}>Fixed price - intermediate - Est,Budget: $50</Text>
                      </TouchableOpacity>
                         <TouchableOpacity onPress={() => handleDesc(project.projectName, project.projectDescription,project.Skill)}>
-                            <Text numberOfLines={expandedDescriptions[index] ? undefined : 2} style={[tw`text-base text-[#020617] pt-5`, {}]}>
-                              {project.projectDescription}
+                            <Text numberOfLines={expandedDescriptions[index] ? undefined : 2} style={[tw`text-base text-[#020617] pt-5`, {}]}
+                            
+                            >
+                              {highlightKeyword(project.projectDescription, selectedValue)}
                             </Text>
                         </TouchableOpacity>
                         {project.projectDescription.length > 100 && (
@@ -450,7 +499,19 @@ const JobPage = () => {
       </ScrollView>
       <MainFooter/>
     </View>
+
+   
+
+    
   );
 };
+
+styles = StyleSheet.create({
+  borderBottom: {
+    borderBottomWidth: 2,
+    borderBottomColor: '#6b7280', // Slate-200 color code
+  },
+  // Add more styles as needed
+});
 
 export default JobPage;

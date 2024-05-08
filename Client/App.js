@@ -25,6 +25,11 @@ import Toaster from './Component/Common/Toaster';
 import { ToastProvider } from 'react-native-toast-notifications';
 import Toast from 'react-native-toast-message';
 import Alert from './Component/Pages/Alert';
+import Profile from './Component/Pages/ProfilePage/Profile';
+import updatepasswordStep1 from "./Component/Pages/UpdatePassword/UpdatePaswordStep1"
+import updatepasswordStep2 from "./Component/Pages/UpdatePassword/updatepasswordstep2"
+import updatepasswordStep3 from "./Component/Pages/UpdatePassword/updatepasswordstep3.js"
+import SearchPage from './Component/Pages/SearchPage.js';
 
 export default function App() {
   const Stack = createStackNavigator();
@@ -58,8 +63,8 @@ export default function App() {
   return (
     <Provider store={store}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName={initialRoute} screenOptions={{ headerShown: false }}>
-          {/* <Stack.Screen name="Profile" component={Profile}/> */}
+        <Stack.Navigator initialRouteName={"SearchPage"} screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="Profile" component={Profile}/>
            <Stack.Screen name="Signup" component={Signup}/>
           <Stack.Screen name="Verification" component={Verification}/> 
           <Stack.Screen name="GetStarted" component={GetStarted}/>
@@ -77,9 +82,12 @@ export default function App() {
           <Stack.Screen name="Login" component={Login}/>
           <Stack.Screen name="JobPage" component={JobPage}/>
           <Stack.Screen name="JobDesc" component={JobDesc}/>
+          <Stack.Screen name='SearchPage' component={SearchPage}/>
           <Stack.Screen name='Index' component={Index}/>
           <Stack.Screen name='Alert' component={Alert}/>
-          
+          <Stack.Screen name='UpdatePasswordStep1' component={updatepasswordStep1}/>
+          <Stack.Screen name='updatepasswordstep2' component={updatepasswordStep2}/>
+          <Stack.Screen name='updatepasswordstep3' component={updatepasswordStep3}/>
         </Stack.Navigator> 
       </NavigationContainer>
       <Toast/>

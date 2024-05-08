@@ -13,17 +13,17 @@ exports.SignupRoute={
 }
 
 exports.Profile={
-    profileInfo:"http://192.168.160.191:4000/v1/FindByEmail" ,  
-    UpdateProfile:"http://192.168.160.191:4000/v1/updateProfile",
-    DeleteProfile:"http://192.168.160.191:4000/v1/deleteProfile",
-    updatepassword:"http://192.168.160.191:4000/v1/updatePassword"
+    profileInfo:"http://192.168.146.20:4000/v1/FindByEmail" ,  
+    UpdateProfile:"http://192.168.146.20:4000/v1/updateProfile",
+    DeleteProfile:"http://192.168.146.20:4000/v1/deleteProfile",
+    updatepassword:"http://192.168.146.20:4000/v1/updatePassword"
 }
 exports.projectsRoute={
-    projectByName : "http://192.168.160.191:4000/v1/projects/findProjectByProjectName",
-    createProject:"http://192.168.160.191:4000/v1/projects/addProject",
-    project: "http://192.168.160.191:4000/v1/projects/findProjects",
-    projectById : "http://192.168.160.191:4000/v1/projects/findProjectById",
-    updatedProject : "http://192.168.160.191:4000/v1/projects/updatedProject",
+    projectByName : "http://192.168.146.20:4000/v1/projects/findProjectByProjectName",
+    createProject:"http://192.168.146.20:4000/v1/projects/addProject",
+    project: "http://192.168.146.20:4000/v1/projects/findProjects",
+    projectById : "http://192.168.146.20:4000/v1/projects/findProjectById",
+    updatedProject : "http://192.168.146.20:4000/v1/projects/updatedProject",
 }
 
 exports.savedProjectRoute = {
