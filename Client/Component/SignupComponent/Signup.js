@@ -88,7 +88,7 @@ const Signup = () => {
           
      
       setLoading(true)
-      const OtpGenrateResponse=await generateOTP(email ? email : data.Email)
+      const OtpGenrateResponse = await generateOTP({ email: email ? email : data.Email, purpose: "SignIn" });
       setLoading(false)
       if(OtpGenrateResponse.data.message==="Profile found"){
         Toast.show({

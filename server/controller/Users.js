@@ -11,8 +11,7 @@ const Alert = require("../Models/Alert.js");
 exports.GetOtp = async (req, res) => {
   
   try {
-    const { Email } = req.body;
-    console.log("Email",Email)
+    const { Email,purpose } = req.body;
     // Check if the email is provided
     if (!Email) {
       return res.status(400).json({
@@ -22,9 +21,9 @@ exports.GetOtp = async (req, res) => {
     }
 
     // Check if the profile with the provided email exists
+  
     const userProfile = await Profile.findOne({ Email });
-    console.log("user",userProfile)
-    if (userProfile) {
+    if (userProfile && purpose=="SignIn") {
       return res.status(200).json({
         success: false,
         message: "Profile found",
@@ -41,7 +40,6 @@ exports.GetOtp = async (req, res) => {
     });
 
     await otpDocument.save();
-      console.log("otp",otpDocument)
     // sending mail in email
     const sendingMail=await nodemailerSender(Email,"Email Verification Code",otpTemplate(generatedOtp))
     return res.status(200).json({
@@ -173,7 +171,6 @@ exports.signup = async (req, res) => {
 
 exports.login=async(req,res)=>{
   try{
-
       const {email,password}=req.body;
       //validation
       if(!email || !password){

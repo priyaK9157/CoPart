@@ -2,10 +2,9 @@ import axios from 'axios'
 
 const { generateVerifyOTP } = require("../Api")
 
-export const generateOTP = async(email) => {
+export const generateOTP = async(email,purpose) => {
     try{
-        console.log("hii",generateVerifyOTP.generateOTP)
-        const response = await axios.post(generateVerifyOTP.generateOTP, {Email: email})
+        const response = await axios.post(generateVerifyOTP.generateOTP, {Email: email,purpose})
         console.log("OtpGenrateResponse",response)
         return response;
     }catch(error){
@@ -14,6 +13,7 @@ export const generateOTP = async(email) => {
 }
 
 export const verifyOTP = async(email, user_Otp) => {
+    console.log("data",email, user_Otp)
     try{
         const response = await axios.post(generateVerifyOTP.verifyOTP, {Email: email, user_Otp: user_Otp})
         console.log("response", response);
