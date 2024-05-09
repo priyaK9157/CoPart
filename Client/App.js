@@ -25,7 +25,13 @@ import Toaster from './Component/Common/Toaster';
 import { ToastProvider } from 'react-native-toast-notifications';
 import Toast from 'react-native-toast-message';
 import Alert from './Component/Pages/Alert';
+import EditGithubAcc from './Component/Pages/ProfilePage/EditGithubAcc';
+import EditLinkdedinAcc from './Component/Pages/ProfilePage/EditLinkdedinAcc';
+import EditProfessionalRole from './Component/Pages/ProfilePage/EditProfessionalRole';
+import EditProfile from './Component/Pages/ProfilePage/EditProfile';
+import EditSkills from './Component/Pages/ProfilePage/EditSkills';
 import Profile from './Component/Pages/ProfilePage/Profile';
+import EditUserBio from './Component/Pages/ProfilePage/EditUserBio';
 import updatepasswordStep1 from "./Component/Pages/UpdatePassword/UpdatePaswordStep1"
 import updatepasswordStep2 from "./Component/Pages/UpdatePassword/updatepasswordstep2"
 import updatepasswordStep3 from "./Component/Pages/UpdatePassword/updatepasswordstep3.js"
@@ -63,9 +69,16 @@ export default function App() {
   return (
     <Provider store={store}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName={"SearchPage"} screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="Profile" component={Profile}/>
-           <Stack.Screen name="Signup" component={Signup}/>
+        <Stack.Navigator initialRouteName={"Profile"} screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="Profile" component={Profile}/>
+          <Stack.Screen name="EditGithubAcc" component={EditGithubAcc}/>
+          <Stack.Screen name="EditLinkdedinAcc" component={EditLinkdedinAcc}/>
+          <Stack.Screen name="EditProfessionalRole" component={EditProfessionalRole}/>
+          <Stack.Screen name="EditProfile" component={EditProfile}/>
+          <Stack.Screen name="EditSkills" component={EditSkills}/>
+          <Stack.Screen name="EditUserBio" component={EditUserBio}/>
+
+          <Stack.Screen name="Signup" component={Signup}/>
           <Stack.Screen name="Verification" component={Verification}/> 
           <Stack.Screen name="GetStarted" component={GetStarted}/>
           <Stack.Screen name="ProfessionalInfo" component={ProfessionalRole}/> 

@@ -16,6 +16,7 @@ exports.FindByEmail = async (email) => {
 
 exports.UpdateProfile = async(data) => {
     console.log("data",data)
+   
     try{
         const response = await axios.put(Profile.UpdateProfile, data);
         console.log("response hai baba abhi ka", response);
@@ -23,7 +24,7 @@ exports.UpdateProfile = async(data) => {
             return response;
         }
     }catch(error){
-        console.log("error", error);
+        console.log("error", error.messege);
     }
 }
 
