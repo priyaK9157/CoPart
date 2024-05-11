@@ -2,7 +2,7 @@ import axios from 'axios';
 import {Profile} from '../Api';
 
 exports.FindByEmail = async (email) => {
-    console.log("pregnant",email)
+
     try{
         const response = await axios.post(Profile.profileInfo, {Email:email});
         console.log("response", response);
@@ -15,7 +15,6 @@ exports.FindByEmail = async (email) => {
 }
 
 exports.UpdateProfile = async(data) => {
-    console.log("data",data)
     try{
         const response = await axios.put(Profile.UpdateProfile, data);
         console.log("response hai baba abhi ka", response);

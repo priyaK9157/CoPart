@@ -1,6 +1,6 @@
 import React, { useState, useEffect} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { View, TextInput, Text, TouchableOpacity, ScrollView ,Image,StyleSheet} from 'react-native';
+import { View, TextInput, Text, TouchableOpacity, ScrollView ,Image,StyleSheet,ActivityIndicator} from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import MainHeader from '../Common/MainHeader';
 import tw from 'twrnc';
@@ -20,6 +20,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {DecodedTokenHandler} from '../../services/operations/generate&verifyOTP'
 import MainFooter from '../Common/MainFooter';
 import searchIcon from "../../assets/search.png"
+import { updateSelectedValue } from '../../reducers/SearchData';
+import Loader from './Loader';
+
+
+
+
 
 const JobPage = () => {
 
@@ -40,12 +46,16 @@ const JobPage = () => {
   const{selectedValue}=useSelector((state)=>state.SearchData)
   const [expandedDescriptionIndex, setExpandedDescriptionIndex] = useState(null);
   const [filteredProjects, setFilteredProjects] = useState([]);
-  
+  const[loading,setIsLoading]=useState(false);
+  const[recentLoader,setRecentLoader]=useState(false);
+  const[savedLoader,setSavedLoader]=useState(false);
+
   const SavedProject = async () => {
     try {
-       
+  
       const response = await getSavedProject(UserMail);
       setJobs(response.data.response);
+     
     } catch (error) {
       console.log("error", error.message);
     }
@@ -63,8 +73,10 @@ const JobPage = () => {
 
   const RecentProject = async () => {
     try {
+      setRecentLoader(true)
       const response = await getRecentProject();
       setJobs(response.data.response);
+     setRecentLoader(false);
     } catch (error) {
       console.log("error", error.message);
     }
@@ -108,32 +120,41 @@ const JobPage = () => {
   };
 
   const func = async () => {
+   setIsLoading(true)
     const variable = await ProjectsHandler();
     setState(variable?.data?.projects);
+   setIsLoading(false)
   };
 
   const GetUserEmail=async()=>{
+    
     const Token  = await AsyncStorage.getItem('token');
     const response = await DecodedTokenHandler(Token);
     const email = response.data.Email;
     setUserMail(email);
+
   }
 
 
 
   // Function to highlight the search keyword in a given text
   const filterProjects = () => {
-    const filtered = jobs.filter((project) => {
-      const projectName = project.projectName.toLowerCase();
-      const projectDesc = project.projectDescription.toLowerCase();
-      const keyword = selectedValue.toLowerCase();
-      return projectName.includes(keyword) || projectDesc.includes(keyword);
-    });
-    console.log("filtered",filtered)
-    setFilteredProjects(filtered);
+
+    if(jobs.length>0){
+      const filtered = jobs?.filter((project) => {
+        const projectName = project?.projectName?.toLowerCase();
+        const projectDesc = project?.projectDescription?.toLowerCase();
+        const keyword = selectedValue?.toLowerCase();
+        return projectName.includes(keyword) || projectDesc.includes(keyword);
+      });
+      console.log("filtered",filtered)
+      setFilteredProjects(filtered);
+
+    }
   };
  
   const highlightKeyword = (text, keyword) => {
+   
     if (!keyword) return <Text>{text}</Text>;
 
     const regex = new RegExp(`(${keyword})`, 'gi');
@@ -143,6 +164,7 @@ const JobPage = () => {
         <Text key={index} style={{ backgroundColor: 'yellow' }}>{part}</Text> : 
         <Text key={index}>{part}</Text>
     ));
+ 
 };
 
 
@@ -174,8 +196,10 @@ const JobPage = () => {
 
   const findSavedJob = async() => {
       try{
+        setSavedLoader(true)
         const res = await getSavedProject(UserMail);
         setSavedProject(res.data.response.SavedJobs)
+        setSavedLoader(false);
       }catch(error){
         console.log("error", error);
       }
@@ -204,9 +228,13 @@ const JobPage = () => {
 
 const updateSavedProjects = (projectId) => {
   const updatedProjects = state.filter(project => project._id !== projectId);
-  console.log("updated",updatedProjects)
   setState(updatedProjects);
 }
+
+const handleTextInputChange = async() => {
+  console.log("hiii")
+  navigation.navigate("SearchPage")
+};
 
   useEffect(()=>{
     findRecentJob();
@@ -217,7 +245,6 @@ const updateSavedProjects = (projectId) => {
   },[])
 
 
-
   return (
     <View style={[tw`bg-white h-[100%]`]}>
       <MainHeader mainName="Projects" icon1="" icon2="notifications" />
@@ -226,12 +253,24 @@ const updateSavedProjects = (projectId) => {
         <View style={[tw`flex flex-row w-11/12 mx-auto justify-between`, {}]}>
         <View style={[tw`flex flex-col items-center`, { position: 'relative' }]}>
             <AntDesign name="search1" size={24} color="black" style={tw`absolute left-5 top-2`} />
-        <TouchableOpacity >
-            <TextInput
-                value={selectedValue}
-                placeholder='Search for Projects...'
-                style={[tw`relative rounded-3xl border-[3px] p-1 pl-12 w-[16rem] border-gray-300`, { fontFamily: 'MadimiOne' }]}
-            />
+        <TouchableOpacity style={tw`relative rounded-3xl border-[3px] h-[3rem] p-1 pl-12 w-[16rem] border-gray-300 flex flex-row items-center`} 
+        onPress={handleTextInputChange}>
+   
+              <TextInput
+                  value={selectedValue}
+                  placeholder='Search for Projects...'
+                  style={[tw``, { fontFamily: 'MadimiOne' }]}
+              />
+       
+           {
+              selectedValue && (
+              <TouchableOpacity onPress={()=>{
+                 dispatch(updateSelectedValue(null))
+              }}>
+                <MaterialIcons name="cancel" size={24} color="black"  style={tw` ml-7 text-2xl`}/>
+              </TouchableOpacity>
+              )
+           }
         </TouchableOpacity>
         </View>
           <MaterialCommunityIcons name="heart-circle-outline" size={24} color="black" style={[tw`flex items-center text-5xl text-green-600`, {}]} />
@@ -249,12 +288,22 @@ const updateSavedProjects = (projectId) => {
               <Text style={[tw`text-lg font-semibold text-gray-400 pb-1`, recent && tw`text-green-600 font-semibold`]}>{'Most Recent'}</Text>
             </TouchableOpacity>
           </View>
+            
+          {/*loader*/}
+          {
+             loading || recentLoader || savedLoader ===true && (
+              <View style={tw`  h-[28rem]`}>
+                   <Loader/>
+              </View>
+                
+             )
+          }
 
-          {myFeed && (
+          {myFeed  && (
             <View style={[tw`mt-2 w-12/12 mx-auto flex flex-row justify-between mb-20`, { width: '100%' }]}>
 
               <View style={[tw` p-3`]}>
-                { (filteredProjects ? filteredProjects : state)?.map((project, index) => (
+                { (filteredProjects && selectedValue ? filteredProjects : state)?.map((project, index) => (
                     <View key={index} style={tw`  w-[100%] mt-3 pb-6  border-b-2 border-gray-200 `}>
                     <TouchableOpacity onPress={() => handleDesc(project.projectName, project.projectDescription,project.Skill)}>
                     <TimeAgoText createdAt={project.createdAt} />
@@ -331,6 +380,7 @@ const updateSavedProjects = (projectId) => {
               </View>  
             </View>
           )}
+          
 
           {matches && (
             <View style={[tw`mt-2 pl-4 flex flex-row justify-between mb-20`, { width: '100%' }]}>
