@@ -28,9 +28,7 @@ async function findProjectByProjectName(req,res){
     const {projectName} = req.body;
     console.log("proh",projectName)
     const response = await Project.findOne({projectName:projectName});
-    console.log(
-      "res",response
-    )
+    
     return res.status(200).json({
       success: true,
       message: "Projects retrieved successfully",
@@ -224,7 +222,7 @@ async function findProjectById(req,res) {
     const {id} = req.body
     console.log("id", id)
     const response = await Project.find({profileId:id});
-    console.log("response", response);
+    
 
     if (!response) {
       return res.status(404).json({

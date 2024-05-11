@@ -50,7 +50,7 @@ exports.addSavedProject = async (req, res) => {
 exports.getRecentProject = async(req,res) => {
     try{
         const response = await Project.find().sort({ createdAt: -1 }).exec();
-        console.log("response", response)
+       
 
         return res.status(200).json({
             success: true,
@@ -69,7 +69,7 @@ exports.getSavedProject = async(req, res) =>{
     try{
         const {Email} = req.body;
         const response = await Profile.findOne({Email}).populate("SavedJobs").exec();
-        console.log("respnse" , response)
+        
         if(!response){
             return res.status(404).json({
                 success: false,

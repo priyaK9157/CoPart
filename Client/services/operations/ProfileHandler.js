@@ -22,7 +22,7 @@ exports.UpdateProfile = async(data) => {
             return response;
         }
     }catch(error){
-        console.log("error", error);
+        console.log("error", error.messege);
     }
 }
 
