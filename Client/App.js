@@ -36,6 +36,8 @@ import updatepasswordStep1 from "./Component/Pages/UpdatePassword/UpdatePaswordS
 import updatepasswordStep2 from "./Component/Pages/UpdatePassword/updatepasswordstep2"
 import updatepasswordStep3 from "./Component/Pages/UpdatePassword/updatepasswordstep3.js"
 import SearchPage from './Component/Pages/SearchPage.js';
+import Loader from './Component/Pages/Loader.js';
+
 
 export default function App() {
   const Stack = createStackNavigator();
@@ -69,16 +71,9 @@ export default function App() {
   return (
     <Provider store={store}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName={"Profile"} screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Profile" component={Profile}/>
-          <Stack.Screen name="EditGithubAcc" component={EditGithubAcc}/>
-          <Stack.Screen name="EditLinkdedinAcc" component={EditLinkdedinAcc}/>
-          <Stack.Screen name="EditProfessionalRole" component={EditProfessionalRole}/>
-          <Stack.Screen name="EditProfile" component={EditProfile}/>
-          <Stack.Screen name="EditSkills" component={EditSkills}/>
-          <Stack.Screen name="EditUserBio" component={EditUserBio}/>
-
-          <Stack.Screen name="Signup" component={Signup}/>
+        <Stack.Navigator initialRouteName={initialRoute} screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="Profile" component={Profile}/>
+           <Stack.Screen name="Signup" component={Signup}/>
           <Stack.Screen name="Verification" component={Verification}/> 
           <Stack.Screen name="GetStarted" component={GetStarted}/>
           <Stack.Screen name="ProfessionalInfo" component={ProfessionalRole}/> 
@@ -100,8 +95,9 @@ export default function App() {
           <Stack.Screen name='Alert' component={Alert}/>
           <Stack.Screen name='UpdatePasswordStep1' component={updatepasswordStep1}/>
           <Stack.Screen name='updatepasswordstep2' component={updatepasswordStep2}/>
-          <Stack.Screen name='updatepasswordstep3' component={updatepasswordStep3}/>
-        </Stack.Navigator> 
+          <Stack.Screen name='updatepasswordstep3' component={updatepasswordStep3}/>   
+          <Stack.Screen name='Loader' component={Loader}/>      
+          </Stack.Navigator> 
       </NavigationContainer>
       <Toast/>
      </Provider>

@@ -12,6 +12,7 @@ exports.GetOtp = async (req, res) => {
   
   try {
     const { Email,purpose } = req.body;
+    console.log("pu",req.body)
     // Check if the email is provided
     if (!Email) {
       return res.status(400).json({
@@ -38,10 +39,11 @@ exports.GetOtp = async (req, res) => {
       Email: Email,
       otp: generatedOtp,
     });
-
+    
     await otpDocument.save();
     // sending mail in email
     const sendingMail=await nodemailerSender(Email,"Email Verification Code",otpTemplate(generatedOtp))
+    console.log("send",sendingMail)
     return res.status(200).json({
       success: true,
       message: "OTP generated successfully",

@@ -1,7 +1,7 @@
 const Profile = require("../Models/Profile");
 const Project = require("../Models/Project");
 const User = require("../Models/User");
-const bcrypt = require('bcrypt');
+const bcrypt=require("bcrypt")
 
 // update profile
 exports.updateProfile=async(req,res)=>{
@@ -82,8 +82,7 @@ exports.DeleteProfile=async(req,res)=>{
 //update password
 exports.updatePassword=async(req,res)=>{
     try{
-       const{newPassword,Email}=req.body;
-       console.log("req",req.body)
+       const{Email,newPassword}=req.body;
        const hashedPassword = await bcrypt.hash(newPassword, 10);
        const user_Profile = await Profile.findOneAndUpdate(
         { Email }, 
