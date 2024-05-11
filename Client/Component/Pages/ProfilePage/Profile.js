@@ -8,13 +8,11 @@ import tw from "twrnc";
 import { useFonts } from 'expo-font';
 import { findProjectById } from "../../../services/operations/ProjectsHandler";
 import { DeleteProfile } from "../../../services/operations/ProfileHandler"
-import { Entypo, Ionicons, Feather, MaterialCommunityIcons } from '@expo/vector-icons';
-import { FontAwesome } from '@expo/vector-icons';
+import {Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Foundation } from '@expo/vector-icons';
 import { FontAwesome6 } from '@expo/vector-icons';
 import {useDispatch, useSelector} from 'react-redux'
-import { setuseLinkedinData, setuserGithubData } from '../../../reducers/LinkReducer';
-
+import {setuserGithubData } from '../../../reducers/LinkReducer';
 import { FontAwesome5 } from '@expo/vector-icons';
 
 
@@ -25,7 +23,6 @@ const Profile = () => {
     const [userData, setUserData] = useState(null);
    const dispatch=useDispatch();
    const{userGithubData}=useSelector((slices)=>slices.Links)
-   const {useLinkedinData} = useSelector((state)=>state.Links)
 
    console.log("profile",profile)
 
@@ -358,6 +355,7 @@ const Profile = () => {
                     )}
                 </View>
             </ScrollView>
+           
         </View>
     );
 }
