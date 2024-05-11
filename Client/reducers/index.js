@@ -5,6 +5,7 @@ import CreateProject from './CreateProject';
 import ButtonSlices from './ButtonSlices';
 import Updatepassword from './Updatepassword';
 import SearchData from './SearchData';
+import LinkReducer from './LinkReducer' 
 
 const rootReducer = combineReducers({
   signup: signupReducer,
@@ -12,7 +13,9 @@ const rootReducer = combineReducers({
   createProject:CreateProject,
   buttonSlices:ButtonSlices,
   updatepassword:Updatepassword,
-  SearchData:SearchData
+  SearchData:SearchData,
+  Links: LinkReducer
+
 });
 
 export default rootReducer;

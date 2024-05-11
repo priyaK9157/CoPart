@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ScrollView, View, Text, Linking, TouchableOpacity } from 'react-native';
+import { ScrollView, View, Text, Linking, TouchableOpacity, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { FindByEmail } from '../../../services/operations/ProfileHandler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -12,16 +12,37 @@ import { Entypo, Ionicons, Feather, MaterialCommunityIcons } from '@expo/vector-
 import { FontAwesome } from '@expo/vector-icons';
 import { Foundation } from '@expo/vector-icons';
 import { FontAwesome6 } from '@expo/vector-icons';
-import {UpdateProfile} from "../../../services/operations/ProfileHandler"
+import {useDispatch, useSelector} from 'react-redux'
+import { setuseLinkedinData, setuserGithubData } from '../../../reducers/LinkReducer';
+
+import { FontAwesome5 } from '@expo/vector-icons';
+
 
 const Profile = () => {
     const navigation = useNavigation();
     const [profile, setProfile] = useState(null);
     const [projects, setProjects] = useState(null);
+    const [userData, setUserData] = useState(null);
+   const dispatch=useDispatch();
+   const{userGithubData}=useSelector((slices)=>slices.Links)
+   const {useLinkedinData} = useSelector((state)=>state.Links)
+
+   console.log("profile",profile)
 
     useEffect(() => {
         findProfileByEmail();
     }, []);
+
+
+    useEffect(()=>{
+        navigateToGithubAcc()
+    },[profile])
+
+    useEffect(()=>{
+        navigateToLinkedInAcc()
+    },[profile])
+     
+    
 
     const findProfileByEmail = async () => {
         try {
@@ -60,12 +81,57 @@ const Profile = () => {
         navigation.navigate('EditSkills', { skills: profile.TechStack });
     }
 
-    const navigateToLinkedInAcc = () => {
-        navigation.navigate('EditLinkdedinAcc', { linkedinLink: profile.LinkedIn });
+    const navigateToLinkedInAcc = async (LinkedInLink) => {
+        try {
+            // Check if the LinkedInLink is provided
+            if (!LinkedInLink) {
+                throw new Error('LinkedIn link is not provided');
+            }
+            
+            // Open the LinkedIn profile link in the default browser
+            await Linking.openURL(LinkedInLink);
+        } catch (error) {
+            console.error('Error opening LinkedIn profile:', error);
+        }
     }
+    
+    
+    
 
-    const navigateToGithubAcc = () => {
-        navigation.navigate('EditGithubAcc', { GithubLink: profile.GithubLink });
+    const navigateToGithubAcc = async () => {
+    
+        const githubLink = profile?.GithubLink; 
+        console.log("githubLink", githubLink)   
+        try {
+            // Extract GitHub username from GitHub link
+            const username = extractUsernameFromGithubLink(githubLink);
+    
+            // Fetch user details from GitHub API
+            const response = await fetch(`https://api.github.com/users/${username}`);
+            if (response.ok) {
+                const userData = await response.json();
+                console.log("GitHub User Data:", userData);
+              
+                // Dispatch the fetched GitHub link and user data to Redux store
+               dispatch(setuserGithubData(userData))
+            } else {
+                console.error('Failed to fetch GitHub user data');
+            }
+        } catch (error) {
+            console.error('Error fetching GitHub user data:', error);
+        }
+    }
+    
+    const extractUsernameFromGithubLink = (githubLink) => {
+        // GitHub link format: https://github.com/username
+        // Extract username from GitHub link
+        const regex = /https:\/\/github.com\/([^\/]+)/;
+        const match = githubLink.match(regex);
+        if (match && match[1]) {
+            return match[1];
+        } else {
+            throw new Error('Invalid GitHub link');
+        }
     }
 
     const navigateToEditProject = async () => {
@@ -89,7 +155,12 @@ const Profile = () => {
             console.log("error in catch block", error.message);
         }
     }
-
+    const openProfileLink = () => {
+        if (userData && userData.html_url) {
+            Linking.openURL(userData.html_url).catch((err) => console.error('Failed to open URL:', err));
+        }
+    };
+    
     // Load fonts
     const [fontsLoaded] = useFonts({
         MadimiOne: require("../../../assets/Fonts/2V0YKIEADpA8U6RygDnZZFQoBoHMd2U.ttf"),
@@ -100,7 +171,7 @@ const Profile = () => {
         
     });
 
-
+  
 
     return (
         <View style={tw`bg-gray-100`}>
@@ -133,11 +204,11 @@ const Profile = () => {
                                 </View>
                             </View>
                             
-                        <View style={tw`w-10/12 bg-gray-200 p-8 flex flex-row shadow-md`}>
+                        <View style={tw`w-11/12 bg-gray-200 p-4 flex flex-row shadow-md`}>
                             <View style={tw` flex flex-row gap-3  `}>
                                 <Foundation name="book-bookmark" size={30} color="green" />
                                 <Text style={[tw` text-slate-700 max-w-[100%]`, { fontFamily: "MadimiOne" }]}>Creating connections from pixels to databases, I'm here to weave together your dreams with code that's as friendly as it is powerful. Let's build bridges, not barriers!</Text>
-                                <FontAwesome name="book" size={30} color="brown" />
+                                {/* <FontAwesome name="book" size={30} color="brown" /> */}
                             </View>
                           
                         </View>
@@ -149,6 +220,8 @@ const Profile = () => {
                                         <Feather name="edit" size={25} color="green" style={tw`text-red-400`} />
                                     </TouchableOpacity>
                                 </View>
+
+                                
 
                                 <Foundation name="comment-quotes" size={30} color="black" />
                                 
@@ -221,33 +294,63 @@ const Profile = () => {
                                     </View>
                                 </TouchableOpacity>
                             </View>
-                            <Text style={tw`border-t border-gray-400`}></Text>
+                           
 
                             <Text style={[tw`ml-5 text-3xl w-10/12 `,{fontFamily:'MadimiOne'}]}>Linked accounts</Text>
 
                             <View style={[tw`pb-35 pt-6`, { alignItems: 'center' }]}>
-                                <View style={tw`flex flex-row items-center`}>
-                                    <TouchableOpacity onPress={() => openLink(profile.GithubLink)}>
-                                        <Text style={tw`pl-3 text-green-800 text-base rounded-full border-solid border border-green-800 px-25 py-1 m-2 font-semibold`}>
-                                            <Feather style={tw`px-10`} name="github" size={25} color="red-400" />GitHub
-                                        </Text>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity onPress={navigateToGithubAcc}>
-                                        <Feather name="edit" size={24} color="black" style={tw`text-red-400`} />
-                                    </TouchableOpacity>
-                                </View>
+                                
+                            <View style={tw`flex items-center `}>
+                                {userGithubData  && (
+                                        <View style={tw`max-w-[100%] flex p-2 mr-9 bg-gray-200 shadow-2xl`}>
+                                            <View style={tw`flex flex-row space-between `}>
+                                                <View style={tw`flex flex-row items-center`}>
+                                                    <Text style={tw`text-xl font-semibold`}>GitHub</Text>
+                                                    {userGithubData.created_at && (
+                                                        <Text style={tw`text-gray-600 text-xs ml-1`}>since {userGithubData.created_at.substring(0, 4)}</Text>
+                                                    )}
+                                                </View>
+                                                <Image
+                                                    source={{ uri: userGithubData.avatar_url }}
+                                                    style={[tw`ml-20`,{ width: 30, height: 30, borderRadius: 50, marginVertical: 10 }]}
+                                                />
+                                            </View>
 
-                                <View style={tw`flex ml-5 m-4 flex-row items-center`}>
-                                    <TouchableOpacity onPress={() => openLink(profile.LinkedIn)}>
-                                        <Text style={tw`pl-3 text-green-800 text-base rounded-full border-solid border border-green-800 px-24 py-1 m-2 font-semibold`}>
-                                            <Feather style={tw`px-50`} name="linkedin" size={20} color="red-400" />
-                                            LinkedIn
-                                        </Text>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity onPress={navigateToLinkedInAcc}>
-                                        <Feather name="edit" size={24} color="red-400" style={tw`text-red-400`} />
-                                    </TouchableOpacity>
-                                </View>
+                                            <Text style={tw`text-gray-600 text-base pb-4`}>{userGithubData.name}</Text>
+                                            
+                                            <View style={tw`flex flex-row text-gray-300 text-base pb-4`}>
+                                                <Feather name="link-2" size={24} color="black" />
+                                                <TouchableOpacity onPress={openProfileLink}>
+                                                        <Text style={tw`ml-2 text-green-700 font-semibold`}>View Profile</Text>
+                                                </TouchableOpacity>
+                                            </View>
+                                                
+                                            <View style={tw`flex flex-row text-slate-300 text-base`}>
+                                                <FontAwesome5 name="user-circle" size={24} color="black" />
+                                                <Text style={tw`ml-2`}>Followers: {userGithubData.followers}</Text>
+                                            </View>
+                                            
+                                            <Text style={tw`border-t border-gray-200`}></Text>
+                                        </View>
+                                        
+                                    )}
+
+                                    <View style={tw`flex ml-3 m-4 flex-row items-center`}>
+                                            <TouchableOpacity onPress={() => navigateToLinkedInAcc(profile?.LinkedIn)}>
+                                                <Text style={tw`pl-3 text-green-800 text-base rounded-full border-solid border border-green-800 px-24 py-1 m-2 font-semibold`}>
+                                                    <Feather style={tw`px-50`} name="linkedin" size={20} color="red-400" />
+                                                    LinkedIn
+                                                </Text>
+                                            </TouchableOpacity>
+                                        
+                                        </View>
+
+                            </View>
+
+                                    
+                                
+                     
+                                        
                             </View>
                         </View>
                     ) : (

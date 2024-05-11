@@ -1,12 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Image } from 'react-native';
-import { UpdateProfile } from "../../../services/operations/ProfileHandler";
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { DecodedTokenHandler } from '../../../services/operations/generate&verifyOTP';
-import { FindByEmail } from "../../../services/operations/ProfileHandler";
+import { View, Text, TextInput, Image, Linking } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import tw from 'twrnc';
 import { Feather } from '@expo/vector-icons';
+import tw from 'twrnc';
 
 const GitHubPage = () => {
     const [github, setGithub] = useState('');
@@ -26,7 +22,11 @@ const GitHubPage = () => {
         }
     }
 
-   
+    const openProfileLink = () => {
+        if (userData && userData.html_url) {
+            Linking.openURL(userData.html_url);
+        }
+    };
 
     return (
         <View style={tw`m-5 mt-18`}>
@@ -41,16 +41,19 @@ const GitHubPage = () => {
                 style={tw`m-4 text-lg border border-gray-300 px-2 py-1 rounded-full`}
                 onBlur={() => fetchUserData(github)} // Fetch user data onBlur
             />
-            {userData && (
+           {/* userData { && (
                 <View style={tw`flex items-center`}>
                     <Image
                         source={{ uri: userData.avatar_url }}
                         style={{ width: 100, height: 100, borderRadius: 50, marginVertical: 10 }}
                     />
                     <Text>{userData.login}</Text>
-                    {/* Render additional user data as needed */}
+                    <Text>Followers: {userData.followers}</Text>
+                    <TouchableOpacity onPress={openProfileLink}>
+                        <Text style={tw`text-blue-500 underline`}>View Profile</Text>
+                    </TouchableOpacity>
                 </View>
-            )}
+            )} */}
             <View style={tw`mt-4 mx-auto mt-20 mb-8 border-t border-gray-300 w-full`}>
                 <TouchableOpacity onPress={fetchUserData}>
                     <Text style={tw`bg-green-600 p-3 px-6 rounded-full text-white font-bold text-center`}>Save</Text>
