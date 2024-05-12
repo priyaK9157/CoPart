@@ -69,7 +69,7 @@ exports.getSavedProject = async(req, res) =>{
     try{
         const {Email} = req.body;
         const response = await Profile.findOne({Email}).populate("SavedJobs").exec();
-        
+        console.log("response",response,req.body)
         if(!response){
             return res.status(404).json({
                 success: false,
@@ -83,6 +83,7 @@ exports.getSavedProject = async(req, res) =>{
             response: response
         })
     }catch(error){
+        console.log("error",error)
         return res.status(400).json({
             success: false,
             message: error.message

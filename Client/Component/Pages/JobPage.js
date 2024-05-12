@@ -50,16 +50,6 @@ const JobPage = () => {
   const[recentLoader,setRecentLoader]=useState(false);
   const[savedLoader,setSavedLoader]=useState(false);
 
-  const SavedProject = async () => {
-    try {
-  
-      const response = await getSavedProject(UserMail);
-      setJobs(response.data.response);
-     
-    } catch (error) {
-      console.log("error", error.message);
-    }
-  }
   const addProject = async () => {
     try {
       console.log("addSavedJobs")
@@ -83,7 +73,6 @@ const JobPage = () => {
   }
  
   useEffect(() => {
-    SavedProject();
     RecentProject();
   }, [myFeed,recent]);
 
@@ -204,6 +193,11 @@ const JobPage = () => {
         console.log("error", error);
       }
   }
+  
+  useEffect(()=>{
+     findSavedJob();
+  },[UserMail])
+  
 
   const findRecentJob = async() =>{
     try{
@@ -240,9 +234,6 @@ const handleTextInputChange = async() => {
     findRecentJob();
   },[])
 
-  useEffect(()=>{
-    findSavedJob();
-  },[])
 
 
   return (

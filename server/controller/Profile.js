@@ -7,14 +7,6 @@ const bcrypt=require("bcrypt")
 exports.updateProfile=async(req,res)=>{
      try{
      const {data}=req.body;
-     console.log("data", data);
-     console.log("update k andar aya ki nhi", data.Email)
-     console.log("Professional_Role",data.Professional_Role)
-
-   //   const userProfile = await Profile.findOne({Email:data.Email})
-
-   //   console.log("userProfile",userProfile)
-      
       const Profiles=await Profile.findOneAndUpdate({Email:data.Email},{
         name: data.name,
         Email:data.Email,
