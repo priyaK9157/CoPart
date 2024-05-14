@@ -7,7 +7,7 @@ const Profile = require("../Models/Profile")
 async  function findProjects(req, res){
   try {
 
-    const response=await Project.find({});
+    const response=await Project.find({}).populate('profileId');;
 
     return res.status(200).json({
       success: true,
