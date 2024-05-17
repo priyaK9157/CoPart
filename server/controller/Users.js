@@ -102,7 +102,8 @@ exports.signup = async (req, res) => {
       LinkedinLink,
       password,
       proffesional_Role,
-      user_Dec
+      user_Dec,
+      country
     } = req.body;
    
     if (
@@ -141,7 +142,8 @@ exports.signup = async (req, res) => {
       GithubLink:GithubLink,
       TechStack: techArray,
       password: hashedPassword,
-      SavedJobs:[]
+      SavedJobs:[],
+      Location:country
     });
  
    // create alert message

@@ -34,7 +34,11 @@ const ProfileSchema = mongoose.Schema({
     SavedJobs: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Project', 
-    }]
+    }],
+    Location:{
+         type:String,
+         required:true
+    }
     
 }, { timestamps: true });
 
