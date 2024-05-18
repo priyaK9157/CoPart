@@ -220,8 +220,8 @@ async function AddProject(req, res){
 async function findProjectById(req,res) {
   try {
     const {id} = req.body
-    console.log("id", id)
-    const response = await Project.find({profileId:id});
+
+    const response = await Project.findById(id);
     
 
     if (!response) {

@@ -24,6 +24,10 @@ const projectSchema = new Schema({
   {type:Object,
     required:true
   },
+  Category:{
+      type:String,
+      required:true
+  },
   createdAt: {
     type: Date,
   }
