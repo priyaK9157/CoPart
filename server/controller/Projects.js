@@ -220,8 +220,8 @@ async function AddProject(req, res){
 async function findProjectById(req,res) {
   try {
     const {id} = req.body
-
-    const response = await Project.findById(id);
+  
+    const response = await Project.findById(id).populate('profileId');
     
 
     if (!response) {
