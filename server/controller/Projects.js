@@ -257,6 +257,15 @@ async function AppliedProject(req, res) {
         message: "Profile not found"
       });
     }
+
+     // Check if project is already applied to
+     const matchesProject = profile.AppliedProject.includes(projectid);
+     if (matchesProject) {
+         return res.status(400).json({
+             success: false,
+             message: "Project already applied"
+         });
+     }
      // check edge case if user create the project
      const ProjectInfo=await Project.findById(projectid);
 
