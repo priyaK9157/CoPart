@@ -261,7 +261,7 @@ async function AppliedProject(req, res) {
      // Check if project is already applied to
      const matchesProject = profile.AppliedProject.includes(projectid);
      if (matchesProject) {
-         return res.status(400).json({
+         return res.status(200).json({
              success: false,
              message: "Project already applied"
          });
