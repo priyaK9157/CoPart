@@ -100,7 +100,7 @@ exports.updatePassword=async(req,res)=>{
 exports.FindByEmail=async(req,res)=>{
     try{
        const {Email} =req.body
-       const response=await Profile.findOne({Email:Email}).populate("SavedJobs").populate("Alerts").exec();
+       const response=await Profile.findOne({Email:Email}).populate("SavedJobs").populate("AppliedProject").exec();
        return res.status(200).json({response})
     } catch(error){
       return res.status(404).json({
