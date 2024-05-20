@@ -138,8 +138,11 @@ exports.signup = async (req, res) => {
       type:"info"
     })
 
+    const avatar_url=`https://api.dicebear.com/5.x/initials/svg?seed=${Full_Name}`;
+
     // Create a new profile
     const profile = await Profile.create({
+      ProfileImage:avatar_url,
       name: Full_Name,
       Email: Email,
       Professional_Role:proffesional_Role,

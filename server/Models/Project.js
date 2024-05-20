@@ -3,11 +3,13 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const projectSchema = new Schema({
+
   profileId: 
   { type: Schema.Types.ObjectId, 
     ref: 'Profile', 
     required: true 
   },
+  
   projectName: 
   { type: String,
     required: true

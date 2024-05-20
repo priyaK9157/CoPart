@@ -1,6 +1,10 @@
 const mongoose = require("mongoose");
 
 const ProfileSchema = mongoose.Schema({
+    ProfileImage:{
+        data: Buffer,
+        contentType: String
+    },
     name: {
         type: String,
         required: true
