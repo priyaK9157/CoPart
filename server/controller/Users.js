@@ -132,6 +132,12 @@ exports.signup = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     //converting values
     const techArray = Object.values(req.body.Tech);
+    // create alert message
+    const AlertData= await Alert.create({
+      message:"Congratulations! 🎉 Your account has been created successfully. Welcome aboard! We're thrilled to have you join our community.",
+      type:"info"
+    })
+
     // Create a new profile
     const profile = await Profile.create({
       name: Full_Name,
@@ -143,16 +149,11 @@ exports.signup = async (req, res) => {
       TechStack: techArray,
       password: hashedPassword,
       SavedJobs:[],
+      Alerts:[AlertData._id],
       Location:country
     });
  
-   // create alert message
-     await Alert.create({
-      ProfileId:profile._id,
-      message:"Congratulations! 🎉 Your account has been created successfully. Welcome aboard! We're thrilled to have you join our community.",
-      type:"info"
-    })
-
+   
     const user = await User.create({
       profileInf: profile._id,
       Project: [],
@@ -176,7 +177,6 @@ exports.signup = async (req, res) => {
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
-    
     // Validation
     if (!email || !password) {
       return res.status(401).json({
@@ -204,18 +204,17 @@ exports.login = async (req, res) => {
       // Sign JWT token without expiration time
       let token = jwt.sign(payload, process.env.JWT_SECRET);
 
-      userProfile.token = token;
-      userProfile.password = undefined;
-
       // Create alert message
-      await Alert.create({
-        ProfileId: userProfile._id,
-        message:
-          "Welcome back! 🌟 Your login was successful. If you didn't log in recently, please review your account activity. Your security is our priority!",
+      const alertdata=await Alert.create({
+        message:"Welcome back! 🌟 Your login was successful. If you didn't log in recently, please review your account activity. Your security is our priority!",
         type: "info",
       });
-
+      
+      // set alert
+      userProfile.Alerts.push(alertdata._id);
+      await userProfile.save();
       // Set cookie with the token
+    
       const option = {
         httpOnly: true,
       };

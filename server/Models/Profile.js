@@ -39,6 +39,10 @@ const ProfileSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Project', 
     }],
+    Alerts:[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Alert', 
+    }],
     Location:{
          type:String,
          required:true
