@@ -244,10 +244,56 @@ async function findProjectById(req,res) {
   }
 }
 
+async function AppliedProject(req, res) {
+  try {
+    const { email, projectid } = req.body;
+   
+    // Find the profile by email
+    const profile = await Profile.findOne({ Email: email });
+
+    if (!profile) {
+      return res.status(404).json({
+        success: false,
+        message: "Profile not found"
+      });
+    }
+     // check edge case if user create the project
+     const ProjectInfo=await Project.findById(projectid);
+
+      // Check if the project creator is the same as the user applying for it
+      
+    if (ProjectInfo.profileId.equals(profile._id)) {
+      return res.status(400).json({
+        success: false,
+        message: "You cannot apply to a project you've created."
+      });
+    }
+
+
+    // Add the project id to the AppliedProject array
+    profile.AppliedProject.push(projectid);
+
+    // Save the updated profile
+    await profile.save();
+
+    // Respond with success
+    return res.status(200).json({
+      success: true,
+      message: "Project applied successfully"
+    });
+  } catch (error) {
+    console.error('Error applying project:', error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error"
+    });
+  }
+}
 
 // Export the function
 module.exports = {
   list,
+  AppliedProject,
   updatedProject,
   findProjects,
   deleteProject,

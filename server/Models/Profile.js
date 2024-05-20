@@ -35,6 +35,10 @@ const ProfileSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Project', 
     }],
+    AppliedProject:[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Project', 
+    }],
     Location:{
          type:String,
          required:true
