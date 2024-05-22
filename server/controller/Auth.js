@@ -1,13 +1,11 @@
 const jwt = require("jsonwebtoken");
 
-exports.Auth = async (req, res) => {
+exports.Auth = async (req, res,next) => {
     try {
-        const { token } = req.cookies.token 
-        || req.body.token 
-        || req.header("Authorisation").replace("Bearer ", "");
+        const  token  = req.body.token  || req.header("Authorization").replace("Bearer ", "");
         try {
             const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-            req.email=decodedToken.Email;
+            req.body.Email=decodedToken.email;
             next();
         } catch (error) {
             // Handle invalid signature error

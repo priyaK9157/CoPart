@@ -114,6 +114,7 @@ exports.updatePassword=async(req,res)=>{
 exports.FindByEmail=async(req,res)=>{
     try{
        const {Email} =req.body
+       console.log("bdy",req.body)
        const response=await Profile.findOne({Email:Email}).populate("SavedJobs").populate("AppliedProject").exec();
        return res.status(200).json({response})
     } catch(error){
