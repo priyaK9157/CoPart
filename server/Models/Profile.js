@@ -13,6 +13,18 @@ const ProfileSchema = mongoose.Schema({
         type: String,
         required: true
     },
+    Education:{
+        type: String,
+        required: true
+    },
+    Experience : {
+        type: String,
+        required: true
+    },
+    PersonalWebsite : {
+        type: String,
+        required: true
+    },
     Professional_Role: {
         type: String,
         required: true

@@ -6,10 +6,10 @@ const{DeleteProfile,updateProfile,FindByEmail,updatePassword}=require("../contro
 const {Auth} = require("../controller/Auth")
 
 
-router.delete("/deleteProfile",DeleteProfile);
+router.delete("/deleteProfile",Auth,DeleteProfile);
 router.put("/updateProfile",updateProfile);
 router.post("/FindByEmail",Auth,FindByEmail)
-router.post("/updatePassword",updatePassword)
+router.post("/updatePassword",Auth,updatePassword)
 
 
 module.exports=router

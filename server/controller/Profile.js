@@ -20,6 +20,9 @@ exports.updateProfile = async (req, res) => {
     if (data.GithubLink) updatedProfileData.GithubLink = data.GithubLink;
     if (data.LinkedIn) updatedProfileData.LinkedIn = data.LinkedIn;
     if (data.SavedJobs) updatedProfileData.SavedJobs = data.SavedJobs;
+    if(data.Education) updatedProfileData.Education = data.Education;
+    if(data.Experience) updatedProfileData.Experience = data.Experience;
+    if(data.PersonalWebsite) updatedProfileData.PersonalWebsite = data.PersonalWebsite;
 
     // Find and update the profile with new data
     const updatedProfile = await Profile.findOneAndUpdate(
