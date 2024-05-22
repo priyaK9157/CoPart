@@ -4,34 +4,45 @@ const User = require("../Models/User");
 const bcrypt=require("bcrypt")
 
 // update profile
-exports.updateProfile=async(req,res)=>{
-     try{
-     const {data}=req.body;
-      const Profiles=await Profile.findOneAndUpdate({Email:data.Email},{
-        name: data.name,
-        Email:data.Email,
-        Professional_Role: data.Professional_Role,
-        User_Bio: data.User_Bio,
-        TechStack: data.TechStack,
-        GithubLink: data.GithubLink,
-        LinkedIn: data.LinkedIn,
-        SavedJobs: data.SavedJobs
-      },{new:true})
+exports.updateProfile = async (req, res) => {
+  try {
+    const { data } = req.body;
+    const profileData = await Profile.findOne({ Email: data.Email });
 
-      console.log("Profiles",Profiles)
+    // Create an object to store updated profile data
+    const updatedProfileData = {};
 
-      return res.status(200).json({
-        success:true,
-        message:"Profile Update SuccessFully",
-        profile:Profiles
-      })
-     } catch(error){
-        return res.status(400).json({
-            message: "Error Occurred",
-            error: error,
-          });
-     }
+    // Check each field in the request body and update if it exists
+    if (data.name) updatedProfileData.name = data.name;
+    if (data.Professional_Role) updatedProfileData.Professional_Role = data.Professional_Role;
+    if (data.User_Bio) updatedProfileData.User_Bio = data.User_Bio;
+    if (data.TechStack) updatedProfileData.TechStack = data.TechStack;
+    if (data.GithubLink) updatedProfileData.GithubLink = data.GithubLink;
+    if (data.LinkedIn) updatedProfileData.LinkedIn = data.LinkedIn;
+    if (data.SavedJobs) updatedProfileData.SavedJobs = data.SavedJobs;
+
+    // Find and update the profile with new data
+    const updatedProfile = await Profile.findOneAndUpdate(
+      { Email: data.Email },
+      updatedProfileData,
+      { new: true }
+    );
+
+    console.log("Updated Profile:", updatedProfile);
+
+    return res.status(200).json({
+      success: true,
+      message: "Profile Updated Successfully",
+      profile: updatedProfile
+    });
+  }  catch(error){
+    return res.status(400).json({
+        message: "Error Occurred",
+        error: error,
+      });
+ }
 }
+
 
 // delete profile
 exports.DeleteProfile=async(req,res)=>{

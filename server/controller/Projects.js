@@ -221,8 +221,8 @@ async function findProjectById(req,res) {
   try {
     const {id} = req.body
   
-    const response = await Project.findById(id).populate('profileId');
-    
+    const response = await Project.findById(id).populate('profileId').exec();
+      console.log("res",response)
 
     if (!response) {
       return res.status(404).json({
@@ -234,7 +234,7 @@ async function findProjectById(req,res) {
     return res.status(200).json({
       success: true,
       message: "Project retrieved successfully",
-      project: response // Changed from "projects" to "project"
+      project: response 
     });
   } catch (error) {
     return res.status(500).json({
