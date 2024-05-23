@@ -1,7 +1,11 @@
 const express = require("express");
 const app = express();
+//db and cloudinary import
 const { dbConnect } = require("./config/DbConnection");
+const {cloudinaryConnect}= require("./config/cloudinary")
 
+var fileUpload = require('express-fileupload');
+app.use(fileUpload());
 // Routes
 const Profile = require("./Routes/Profile");
 const User = require("./Routes/User");
@@ -17,6 +21,7 @@ app.use(express.json());
 
 // Database Connection
 dbConnect();
+cloudinaryConnect();
 
 // Enable CORS middleware
 app.use(cors({

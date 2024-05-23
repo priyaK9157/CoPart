@@ -2,8 +2,7 @@ const mongoose = require("mongoose");
 
 const ProfileSchema = mongoose.Schema({
     ProfileImage:{
-        data: Buffer,
-        contentType: String
+        type: String,
     },
     name: {
         type: String,
@@ -62,6 +61,12 @@ const ProfileSchema = mongoose.Schema({
     Location:{
          type:String,
          required:true
+    },
+    Resume:{
+        type:String,
+    },
+    Gender:{
+        type:String,
     }
     
 }, { timestamps: true });

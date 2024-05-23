@@ -145,9 +145,9 @@ exports.signup = async (req, res) => {
       ProfileImage:avatar_url,
       name: Full_Name,
       Email: Email,
-      Education:"",
-      Experience:"",
-      PersonalWebsite:"",
+      Education:"null",
+      Experience:"null",
+      PersonalWebsite:"null",
       Professional_Role:proffesional_Role,
       User_Bio:user_Dec,
       LinkedIn:LinkedinLink,
@@ -156,7 +156,9 @@ exports.signup = async (req, res) => {
       password: hashedPassword,
       SavedJobs:[],
       Alerts:[AlertData._id],
-      Location:country
+      Location:country,
+      Resume:"null",
+      Gender:"null",
     });
  
    

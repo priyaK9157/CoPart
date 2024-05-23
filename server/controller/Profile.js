@@ -1,14 +1,15 @@
 const Profile = require("../Models/Profile");
 const Project = require("../Models/Project");
 const User = require("../Models/User");
-const bcrypt=require("bcrypt")
+const bcrypt=require("bcrypt");
+const { imageUploadToCloudinary } = require("../Utils/imageupload");
 
 // update profile
 exports.updateProfile = async (req, res) => {
   try {
-    const { data } = req.body;
-    const profileData = await Profile.findOne({ Email: data.Email });
-
+    const { data,Email } = req.body;
+    console.log("data",data)
+  
     // Create an object to store updated profile data
     const updatedProfileData = {};
 
@@ -23,15 +24,16 @@ exports.updateProfile = async (req, res) => {
     if(data.Education) updatedProfileData.Education = data.Education;
     if(data.Experience) updatedProfileData.Experience = data.Experience;
     if(data.PersonalWebsite) updatedProfileData.PersonalWebsite = data.PersonalWebsite;
+    if(data.Gender) updatedProfileData.Gender = data.Gender;
 
     // Find and update the profile with new data
     const updatedProfile = await Profile.findOneAndUpdate(
-      { Email: data.Email },
-      updatedProfileData,
+      { Email },
+       updatedProfileData,
       { new: true }
     );
 
-    console.log("Updated Profile:", updatedProfile);
+    
 
     return res.status(200).json({
       success: true,
@@ -123,4 +125,53 @@ exports.FindByEmail=async(req,res)=>{
          error:error
       })
     }
+}
+
+
+exports.updateProfilePicture=async(req,res)=>{
+  try{
+    //data fetch
+    const{secure_url,Email}=req.body
+    const updatedProfile=await Profile.findOneAndUpdate(
+     {Email:Email},
+     {ProfileImage:secure_url},
+     {new:true},
+    )
+    
+  return  res.status(200).json({
+     success:true,
+     message:"image updated SuccessFully",
+     data:updatedProfile
+    })
+
+} catch(error){
+ return res.status(500).json({
+   success: false,
+   message: error.message,
+ })
+}
+}
+
+exports.updateResume=async(req,res)=>{
+  try{
+    //data fetch
+    const{secure_url,Email}=req.body
+    const updatedProfile=await Profile.findOneAndUpdate(
+     {Email:Email},
+     {Resume:secure_url},
+     {new:true},
+    )
+    
+  return  res.status(200).json({
+     success:true,
+     message:"Resume updated SuccessFully",
+     data:updatedProfile
+    })
+
+} catch(error){
+ return res.status(500).json({
+   success: false,
+   message: error.message,
+ })
+}
 }
