@@ -5,7 +5,7 @@ const {getSavedProject, addSavedProject, getRecentProject,removeSavedProject} = 
 const { Auth } = require("../controller/Auth");
 
 router.get("/getRecentProject", Auth,getRecentProject);
-router.post("/addSavedProject", addSavedProject);
+router.post("/addSavedProject", Auth,addSavedProject);
 router.post("/getSavedProject", getSavedProject);
 router.post("/removeSavedProject",Auth,removeSavedProject)
 
