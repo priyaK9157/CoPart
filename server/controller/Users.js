@@ -179,6 +179,38 @@ exports.signup = async (req, res) => {
   }
 };
 
+exports.GetToken=async(req,res)=>{
+   const{email}=req.body;
+   if(!email){
+      return res.status(401).json({
+        success: false,
+        message: "All fields are required. Please Gave  all the details.",
+      });
+   }
+
+    // Check if user exists in the database
+    const userProfile = await Profile.findOne({ Email: email });
+    if (!userProfile) {
+      return res.status(200).json({
+        success: false,
+        message: "User does not exist. Please sign up first.",
+      });
+    }
+    
+    const payload = {
+      email: userProfile.Email,
+      id: userProfile._id,
+    };
+     // Sign JWT token without expiration time
+     let token = jwt.sign(payload, process.env.JWT_SECRET);
+
+     return res.status(200).json({
+          success:true,
+          message:token
+     })
+
+}
+
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
