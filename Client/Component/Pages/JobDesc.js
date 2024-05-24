@@ -40,6 +40,7 @@ const JobDesc = () => {
       console.error('Error fetching project:', error);
     }
   };
+
   
   async function GetUserDetails(){
 

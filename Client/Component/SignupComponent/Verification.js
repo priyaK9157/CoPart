@@ -16,6 +16,7 @@ const Verification = () => {
   const navigate = useNavigation();
   const { data } = useSelector((state) => state.signup);
   console.log("data",data)
+  
   const handleOTPChange = (code) => {
     setOtp(code);
   };
