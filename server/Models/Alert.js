@@ -3,10 +3,6 @@
 const mongoose = require('mongoose');
 
 const alertSchema = new mongoose.Schema({
-   ProfileId:{
-    type: mongoose.Schema.Types.ObjectId,
-    ref:"Profile"
-  },
   message: {
     type: String,
     required: true

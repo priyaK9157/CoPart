@@ -48,7 +48,6 @@ export default function App() {
     async function checkUserAuth() {
       try {
         const token = await AsyncStorage.getItem('token');
-        // const responseEmail = await DecodedTokenHandler(token);
         if (token) {
           setInitialRoute('HomePage');
         } else {

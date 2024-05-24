@@ -3,11 +3,14 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const projectSchema = new Schema({
+
   profileId: 
-  { type: Schema.Types.ObjectId, 
+  {
+    type: Schema.Types.ObjectId, 
     ref: 'Profile', 
     required: true 
   },
+  
   projectName: 
   { type: String,
     required: true
@@ -23,6 +26,10 @@ const projectSchema = new Schema({
   BasicDetail:
   {type:Object,
     required:true
+  },
+  Category:{
+      type:String,
+      required:true
   },
   createdAt: {
     type: Date,

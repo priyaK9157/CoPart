@@ -15,11 +15,9 @@ export const addSavedProject = async(email,_id) => {
 }
 
 export const getSavedProject = async(email) => {
-    console.log("response find ka service me",email )
-    console.log("getSavedProject hai")
+   
     try{
         const response = await axios.post(savedProjectRoute.getSavedProject, {Email:email});
-        console.log("response of recent jobs", response);
         if(response){
             return response;
         }

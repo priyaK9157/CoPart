@@ -5,7 +5,6 @@ const Project = require("../Models/Project")
 exports.addSavedProject = async (req, res) => {
     try {
         const { Email, projectId } = req.body;
-        console.log("ab aaya backend me", Email, projectId)
 
         const profileInfo = await Profile.findOne({ Email }).populate("SavedJobs").exec();
         if (!profileInfo) {
@@ -69,7 +68,7 @@ exports.getSavedProject = async(req, res) =>{
     try{
         const {Email} = req.body;
         const response = await Profile.findOne({Email}).populate("SavedJobs").exec();
-        
+        console.log("response",response,req.body)
         if(!response){
             return res.status(404).json({
                 success: false,
@@ -83,6 +82,7 @@ exports.getSavedProject = async(req, res) =>{
             response: response
         })
     }catch(error){
+        console.log("error",error)
         return res.status(400).json({
             success: false,
             message: error.message
@@ -104,7 +104,7 @@ exports.removeSavedProject= async(req,res)=>{
         const updatedProfile = await Profile.findOne(
             { Email: Email },
           );
-       
+        console.log("ipdate",updatedProfile)
           updatedProfile.SavedJobs=updatedProfile.SavedJobs.filter((id)=>id.toString()!==ProjectId)
           updatedProfile.save();
 

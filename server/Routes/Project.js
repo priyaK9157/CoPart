@@ -16,5 +16,7 @@ router.post('/projects/addProject', projectController.AddProject);
 
 router.post('/projects/findProjectById', projectController.findProjectById);
 
+router.post('/projects/AppliedProject', projectController.AppliedProject);
+
 module.exports = router;
 

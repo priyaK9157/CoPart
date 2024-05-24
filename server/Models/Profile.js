@@ -1,11 +1,26 @@
 const mongoose = require("mongoose");
 
 const ProfileSchema = mongoose.Schema({
+    ProfileImage:{
+        type: String,
+    },
     name: {
         type: String,
         required: true
     },
     Email: {
+        type: String,
+        required: true
+    },
+    Education:{
+        type: String,
+        required: true
+    },
+    Experience : {
+        type: String,
+        required: true
+    },
+    PersonalWebsite : {
         type: String,
         required: true
     },
@@ -27,14 +42,28 @@ const ProfileSchema = mongoose.Schema({
     LinkedIn: {
         type: String,
     },
-    password: {
-        type: String,
-        required: true
-    },
     SavedJobs: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Project', 
-    }]
+    }],
+    AppliedProject:[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Project', 
+    }],
+    Alerts:[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Alert', 
+    }],
+    Location:{
+         type:String,
+         required:true
+    },
+    Resume:{
+        type:String,
+    },
+    Gender:{
+        type:String,
+    }
     
 }, { timestamps: true });
 

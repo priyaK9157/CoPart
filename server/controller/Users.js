@@ -100,19 +100,18 @@ exports.signup = async (req, res) => {
       Email,
       GithubLink,
       LinkedinLink,
-      password,
       proffesional_Role,
-      user_Dec
+      user_Desc,
+      country
     } = req.body;
-   
+    console.log("req",req.body)
     if (
       !Full_Name ||
       !proffesional_Role ||
-      !user_Dec ||
+      !user_Desc ||
       !Tech ||
-      !Email ||
-      
-      !password
+      !Email  ||
+      !country
     ) {
       return res.status(400).json({
         message: "All Field are Required",
@@ -127,30 +126,38 @@ exports.signup = async (req, res) => {
       });
     }
    
-    // Hashing password
-    const hashedPassword = await bcrypt.hash(password, 10);
     //converting values
     const techArray = Object.values(req.body.Tech);
-    // Create a new profile
-    const profile = await Profile.create({
-      name: Full_Name,
-      Email: Email,
-      Professional_Role:proffesional_Role,
-      User_Bio:user_Dec,
-      LinkedIn:LinkedinLink,
-      GithubLink:GithubLink,
-      TechStack: techArray,
-      password: hashedPassword,
-      SavedJobs:[]
-    });
- 
-   // create alert message
-     await Alert.create({
-      ProfileId:profile._id,
+    // create alert message
+    const AlertData= await Alert.create({
       message:"Congratulations! 🎉 Your account has been created successfully. Welcome aboard! We're thrilled to have you join our community.",
       type:"info"
     })
 
+    const avatar_url=`https://api.dicebear.com/5.x/initials/svg?seed=${Full_Name}`;
+
+    // Create a new profile
+    const profile = await Profile.create({
+      ProfileImage:avatar_url,
+      name: Full_Name,
+      Email: Email,
+      Education:"null",
+      Experience:"null",
+      PersonalWebsite:"null",
+      Professional_Role:proffesional_Role,
+      User_Bio:user_Desc,
+      LinkedIn:LinkedinLink,
+      GithubLink:GithubLink,
+      TechStack: techArray,
+      SavedJobs:[],
+      Alerts:[AlertData._id],
+      Location:country,
+      Resume:"null",
+      Gender:"null",
+   
+    });
+ 
+   
     const user = await User.create({
       profileInf: profile._id,
       Project: [],
@@ -164,6 +171,7 @@ exports.signup = async (req, res) => {
       User: user,
     });
   } catch (error) {
+    console.log("error",error)
     return res.json({
       message: "Error Occurred",
       error: error,
@@ -171,70 +179,70 @@ exports.signup = async (req, res) => {
   }
 };
 
-exports.login=async(req,res)=>{
-  try{
-      const {email,password}=req.body;
-      //validation
-      if(!email || !password){
-        return  res.status(401).json({
-              success:false,
-              message:"All Field Are Required Please Fill All The Detail",
-          })
-      }
-
-      //db check if user exit or not
-      const userProfile=await Profile.findOne({Email:email})
-      if(!userProfile){
-         return res.status(200).json({
-              success:false,
-              message:"Sign Up First",
-          })}
-          
-          //jwt token
-      if(await bcrypt.compare(password,userProfile.password)){
-          const payload={
-              email:userProfile.Email,
-              id:userProfile._id,
-          }
-
-
-          let token=jwt.sign(payload,process.env.JWT_SECRET,{
-           
-          });
-
-          userProfile.token=token;
-          userProfile.password=undefined;
-          const option={
-              expires: new Date(Date.now() + 3*24*60*60*1000),
-              httpOnly:true,
-          }
-          // create alert message
-          await Alert.create({
-            ProfileId:userProfile._id,
-            message:"Welcome back! 🌟 Your login was successful. If you didn't log in recently, please review your account activity. Your security is our priority!",
-            type:"info"
-          })
-
-          res.cookie("token",token,option).status(200).json({
-              success:true,
-               token,
-               userProfile,
-               message:"Log In SuccessFully",
-          })
-      }
-      else{
-              return res.status(200).json({
-                  success:false,
-                  message:"password Doesn't Matches",
-               })
-      }
-
-  } catch(err){
-      console.log(err);
-      return res.status(500).json({
-          success:false,
-          message:'Login Failure, please try again',
+exports.login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    // Validation
+    if (!email || !password) {
+      return res.status(401).json({
+        success: false,
+        message: "All fields are required. Please fill in all the details.",
       });
+    }
+
+    // Check if user exists in the database
+    const userProfile = await Profile.findOne({ Email: email });
+    if (!userProfile) {
+      return res.status(200).json({
+        success: false,
+        message: "User does not exist. Please sign up first.",
+      });
+    }
+
+    // Verify password
+    if (await bcrypt.compare(password, userProfile.password)) {
+      const payload = {
+        email: userProfile.Email,
+        id: userProfile._id,
+      };
+
+      // Sign JWT token without expiration time
+      let token = jwt.sign(payload, process.env.JWT_SECRET);
+
+      // Create alert message
+      const alertdata=await Alert.create({
+        message:"Welcome back! 🌟 Your login was successful. If you didn't log in recently, please review your account activity. Your security is our priority!",
+        type: "info",
+      });
+      
+      // set alert
+      userProfile.Alerts.push(alertdata._id);
+      await userProfile.save();
+      // Set cookie with the token
+    
+      const option = {
+        httpOnly: true,
+      };
+
+      res.cookie("token", token, option).status(200).json({
+        success: true,
+        token,
+        userProfile,
+        message: "Login successful.",
+      });
+    } else {
+      return res.status(200).json({
+        success: false,
+        message: "Password doesn't match.",
+      });
+    }
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({
+      success: false,
+      message: "Login failure. Please try again.",
+    });
   }
-}
+};
+
 

@@ -1,45 +1,53 @@
 const Profile = require("../Models/Profile");
 const Project = require("../Models/Project");
 const User = require("../Models/User");
-const bcrypt=require("bcrypt")
+const bcrypt=require("bcrypt");
+const { imageUploadToCloudinary } = require("../Utils/imageupload");
 
 // update profile
-exports.updateProfile=async(req,res)=>{
-     try{
-     const {data}=req.body;
-     console.log("data", data);
-     console.log("update k andar aya ki nhi", data.Email)
-     console.log("Professional_Role",data.Professional_Role)
+exports.updateProfile = async (req, res) => {
+  try {
+    const { data,Email } = req.body;
+    console.log("data",data)
+  
+    // Create an object to store updated profile data
+    const updatedProfileData = {};
 
-   //   const userProfile = await Profile.findOne({Email:data.Email})
+    // Check each field in the request body and update if it exists
+    if (data.name) updatedProfileData.name = data.name;
+    if (data.Professional_Role) updatedProfileData.Professional_Role = data.Professional_Role;
+    if (data.User_Bio) updatedProfileData.User_Bio = data.User_Bio;
+    if (data.TechStack) updatedProfileData.TechStack = data.TechStack;
+    if (data.GithubLink) updatedProfileData.GithubLink = data.GithubLink;
+    if (data.LinkedIn) updatedProfileData.LinkedIn = data.LinkedIn;
+    if (data.SavedJobs) updatedProfileData.SavedJobs = data.SavedJobs;
+    if(data.Education) updatedProfileData.Education = data.Education;
+    if(data.Experience) updatedProfileData.Experience = data.Experience;
+    if(data.PersonalWebsite) updatedProfileData.PersonalWebsite = data.PersonalWebsite;
+    if(data.Gender) updatedProfileData.Gender = data.Gender;
 
-   //   console.log("userProfile",userProfile)
-      
-      const Profiles=await Profile.findOneAndUpdate({Email:data.Email},{
-        name: data.name,
-        Email:data.Email,
-        Professional_Role: data.Professional_Role,
-        User_Bio: data.User_Bio,
-        TechStack: data.TechStack,
-        GithubLink: data.GithubLink,
-        LinkedIn: data.LinkedIn,
-        SavedJobs: data.SavedJobs
-      },{new:true})
+    // Find and update the profile with new data
+    const updatedProfile = await Profile.findOneAndUpdate(
+      { Email },
+       updatedProfileData,
+      { new: true }
+    );
 
-      console.log("Profiles",Profiles)
+    
 
-      return res.status(200).json({
-        success:true,
-        message:"Profile Update SuccessFully",
-        profile:Profiles
-      })
-     } catch(error){
-        return res.status(400).json({
-            message: "Error Occurred",
-            error: error,
-          });
-     }
+    return res.status(200).json({
+      success: true,
+      message: "Profile Updated Successfully",
+      profile: updatedProfile
+    });
+  }  catch(error){
+    return res.status(400).json({
+        message: "Error Occurred",
+        error: error,
+      });
+ }
 }
+
 
 // delete profile
 exports.DeleteProfile=async(req,res)=>{
@@ -106,12 +114,10 @@ exports.updatePassword=async(req,res)=>{
 
 // find by id
 exports.FindByEmail=async(req,res)=>{
-   console.log("first")
     try{
-      console.log("find email k andar")
        const {Email} =req.body
-       
-       const response=await Profile.findOne({Email:Email}).populate("SavedJobs").exec();
+       console.log("bdy",req.body)
+       const response=await Profile.findOne({Email:Email}).populate("SavedJobs").populate("AppliedProject").exec();
        return res.status(200).json({response})
     } catch(error){
       return res.status(404).json({
@@ -119,4 +125,53 @@ exports.FindByEmail=async(req,res)=>{
          error:error
       })
     }
+}
+
+
+exports.updateProfilePicture=async(req,res)=>{
+  try{
+    //data fetch
+    const{secure_url,Email}=req.body
+    const updatedProfile=await Profile.findOneAndUpdate(
+     {Email:Email},
+     {ProfileImage:secure_url},
+     {new:true},
+    )
+    
+  return  res.status(200).json({
+     success:true,
+     message:"image updated SuccessFully",
+     data:updatedProfile
+    })
+
+} catch(error){
+ return res.status(500).json({
+   success: false,
+   message: error.message,
+ })
+}
+}
+
+exports.updateResume=async(req,res)=>{
+  try{
+    //data fetch
+    const{secure_url,Email}=req.body
+    const updatedProfile=await Profile.findOneAndUpdate(
+     {Email:Email},
+     {Resume:secure_url},
+     {new:true},
+    )
+    
+  return  res.status(200).json({
+     success:true,
+     message:"Resume updated SuccessFully",
+     data:updatedProfile
+    })
+
+} catch(error){
+ return res.status(500).json({
+   success: false,
+   message: error.message,
+ })
+}
 }
