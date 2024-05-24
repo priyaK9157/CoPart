@@ -26,6 +26,7 @@ exports.updateProfile = async (req, res) => {
     if(data.PersonalWebsite) updatedProfileData.PersonalWebsite = data.PersonalWebsite;
     if(data.Gender) updatedProfileData.Gender = data.Gender;
 
+
     // Find and update the profile with new data
     const updatedProfile = await Profile.findOneAndUpdate(
       { Email },
