@@ -7,8 +7,8 @@ const Profile = require("../Models/Profile")
 async  function findProjects(req, res){
   try {
 
-    const response=await Project.find({}).populate('profileId');;
-
+    const response=await Project.find({}).populate('profileId');
+      console.log("res",response)
     return res.status(200).json({
       success: true,
       message: "Projects retrieved successfully",
@@ -223,7 +223,7 @@ async function findProjectById(req,res) {
   try {
     const {id} = req.body
   
-    const response = await Project.findById(id).populate('profileId').exec();
+    const response = await Project.findById(id).populate('profileId').exec();;
       console.log("res",response)
 
     if (!response) {
@@ -252,7 +252,7 @@ async function AppliedProject(req, res) {
    
     // Find the profile by email
     const profile = await Profile.findOne({ Email: email });
-
+    console.log("email",email,projectid)
     if (!profile) {
       return res.status(404).json({
         success: false,
@@ -286,7 +286,7 @@ async function AppliedProject(req, res) {
 
     // Save the updated profile
     await profile.save();
-
+  
     // Respond with success
     return res.status(200).json({
       success: true,
