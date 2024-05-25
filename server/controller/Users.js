@@ -199,7 +199,7 @@ exports.GetToken=async(req,res)=>{
     
     const payload = {
       email: userProfile.Email,
-      id: userProfile._id,
+
     };
      // Sign JWT token without expiration time
      let token = jwt.sign(payload, process.env.JWT_SECRET);
