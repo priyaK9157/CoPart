@@ -42,10 +42,6 @@ const ProfileSchema = mongoose.Schema({
     LinkedIn: {
         type: String,
     },
-    password: {
-        type: String,
-        required: true
-    },
     SavedJobs: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Project', 
