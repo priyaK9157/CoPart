@@ -100,20 +100,18 @@ exports.signup = async (req, res) => {
       Email,
       GithubLink,
       LinkedinLink,
-      password,
       proffesional_Role,
-      user_Dec,
+      user_Desc,
       country
     } = req.body;
-   
+    console.log("req",req.body)
     if (
       !Full_Name ||
       !proffesional_Role ||
-      !user_Dec ||
+      !user_Desc ||
       !Tech ||
-      !Email ||
-      
-      !password
+      !Email  ||
+      !country
     ) {
       return res.status(400).json({
         message: "All Field are Required",
@@ -128,8 +126,6 @@ exports.signup = async (req, res) => {
       });
     }
    
-    // Hashing password
-    const hashedPassword = await bcrypt.hash(password, 10);
     //converting values
     const techArray = Object.values(req.body.Tech);
     // create alert message
@@ -149,16 +145,16 @@ exports.signup = async (req, res) => {
       Experience:"null",
       PersonalWebsite:"null",
       Professional_Role:proffesional_Role,
-      User_Bio:user_Dec,
+      User_Bio:user_Desc,
       LinkedIn:LinkedinLink,
       GithubLink:GithubLink,
       TechStack: techArray,
-      password: hashedPassword,
       SavedJobs:[],
       Alerts:[AlertData._id],
       Location:country,
       Resume:"null",
       Gender:"null",
+   
     });
  
    
@@ -175,6 +171,7 @@ exports.signup = async (req, res) => {
       User: user,
     });
   } catch (error) {
+    console.log("error",error)
     return res.json({
       message: "Error Occurred",
       error: error,
@@ -202,7 +199,7 @@ exports.GetToken=async(req,res)=>{
     
     const payload = {
       email: userProfile.Email,
-      id: userProfile._id,
+
     };
      // Sign JWT token without expiration time
      let token = jwt.sign(payload, process.env.JWT_SECRET);

@@ -1,8 +1,6 @@
 const Project = require("../Models/Project");
 const User = require("../Models/User");
-const Profile = require("../Models/Profile");
-const nodemamailSender = require("../Utils/MailSender");
-const collaborationInvitationTemplate = require("../Template/collaborationInvitationTemplate");
+const Profile = require("../Models/Profile")
   
 
 // Get projects based on search criteria
@@ -163,9 +161,10 @@ async function list(_criteria) {
 // Assuming you have the necessary imports and setup
 
 async function AddProject(req, res){
+  console.log("hii", req.body)
   try {
-    const {Email, projectName, projectDescription,Skill,BasicDetail } = req.body;
-    if (!Email || !Skill || !projectName || !projectDescription || !BasicDetail) {
+    const {Email, projectName, projectDescription,Skill,BasicDetail, Category } = req.body;
+    if (!Email || !Skill || !projectName || !projectDescription || !BasicDetail || !Category) {
       return res.status(400).json({
         message: "Email, projectName, and projectDescription are required",
       });
@@ -188,6 +187,7 @@ async function AddProject(req, res){
       projectDescription: projectDescription,
       Skill: Skill,
       BasicDetail: BasicDetail,
+      Category: Category
     });
 
     const user = await User.findOne({
