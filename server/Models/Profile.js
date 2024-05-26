@@ -33,7 +33,7 @@ const ProfileSchema = mongoose.Schema({
         required: true
     },
     TechStack: {
-        type: Array,
+        type: [String],
         required: true
     },
     GithubLink: {
