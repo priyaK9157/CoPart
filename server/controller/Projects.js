@@ -1,6 +1,8 @@
 const Project = require("../Models/Project");
 const User = require("../Models/User");
-const Profile = require("../Models/Profile")
+const Profile = require("../Models/Profile");
+const nodemamailSender = require("../Utils/MailSender");
+const collaborationInvitationTemplate = require("../Template/collaborationInvitationTemplate");
   
 
 // Get projects based on search criteria
@@ -209,6 +211,7 @@ async function AddProject(req, res){
       project: newProject,
     });
   } catch (error) {
+    console.log("error",error)
     return res.status(500).json({
       message: "Error occurred",
       error: error.message,
@@ -247,10 +250,8 @@ async function findProjectById(req,res) {
 async function AppliedProject(req, res) {
   try {
     const { email, projectid } = req.body;
-   
     // Find the profile by email
     const profile = await Profile.findOne({ Email: email });
-    console.log("email",email,projectid)
     if (!profile) {
       return res.status(404).json({
         success: false,
@@ -261,18 +262,18 @@ async function AppliedProject(req, res) {
      // Check if project is already applied to
      const matchesProject = profile.AppliedProject.includes(projectid);
      if (matchesProject) {
-         return res.status(200).json({
+         return res.status(404).json({
              success: false,
              message: "Project already applied"
          });
      }
      // check edge case if user create the project
-     const ProjectInfo=await Project.findById(projectid);
+     const ProjectInfo=await Project.findById(projectid).populate("profileId").exec();
 
       // Check if the project creator is the same as the user applying for it
-      
+      console.log("projectid",profile,ProjectInfo)
     if (ProjectInfo.profileId.equals(profile._id)) {
-      return res.status(400).json({
+      return res.status(404).json({
         success: false,
         message: "You cannot apply to a project you've created."
       });
@@ -284,7 +285,8 @@ async function AppliedProject(req, res) {
 
     // Save the updated profile
     await profile.save();
-  
+   // sending mail in email
+   await nodemamailSender(ProjectInfo?.profileId?.Email,"Hii We Got Someone For Your Project Congrahulations",collaborationInvitationTemplate(ProjectInfo?.profileId?.name,profile?.name,profile?.Email,profile?.GithubLink,profile?.LinkedIn))
     // Respond with success
     return res.status(200).json({
       success: true,

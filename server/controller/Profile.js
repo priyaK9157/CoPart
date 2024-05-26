@@ -7,7 +7,7 @@ const { imageUploadToCloudinary } = require("../Utils/imageupload");
 // update profile
 exports.updateProfile = async (req, res) => {
   try {
-    const { data,Email } = req.body;
+    const { data } = req.body;
     console.log("data",data)
   
     // Create an object to store updated profile data
@@ -29,12 +29,12 @@ exports.updateProfile = async (req, res) => {
 
     // Find and update the profile with new data
     const updatedProfile = await Profile.findOneAndUpdate(
-      { Email },
+      { Email:data.Email },
        updatedProfileData,
       { new: true }
     );
 
-    
+  
 
     return res.status(200).json({
       success: true,
@@ -117,8 +117,8 @@ exports.updatePassword=async(req,res)=>{
 exports.FindByEmail=async(req,res)=>{
     try{
        const {Email} =req.body
-       console.log("bdy",req.body)
-       const response=await Profile.findOne({Email:Email}).populate("SavedJobs").populate("AppliedProject").exec();
+       const response=await Profile.findOne({Email}).populate("SavedJobs").populate("AppliedProject").exec();
+       console.log(Email,response)
        return res.status(200).json({response})
     } catch(error){
       return res.status(404).json({
