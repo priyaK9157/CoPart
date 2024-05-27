@@ -10,7 +10,10 @@ const projectSchema = new Schema({
     ref: 'Profile', 
     required: true 
   },
-  
+  projectPicture:{
+     type:String,
+     required:true
+  },
   projectName: 
   { type: String,
     required: true
@@ -24,7 +27,8 @@ const projectSchema = new Schema({
     required: true 
   },
   BasicDetail:
-  {type:Object,
+  {
+    type:Object,
     required:true
   },
   Category:{

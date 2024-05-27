@@ -9,7 +9,7 @@ router.post('/projects/findProjectByProjectName', projectController.findProjectB
 
 router.put('/projects/updateProject', projectController.updatedProject);
 
-router.delete('/projects/deleteProject/:projectId', projectController.deleteProject);
+router.delete('/projects/deleteProject', projectController.deleteProject);
 
 router.get('/projects/listProjects', projectController.list);
 
@@ -18,6 +18,8 @@ router.post('/projects/addProject', projectController.AddProject);
 router.post('/projects/findProjectById', projectController.findProjectById);
 
 router.post('/projects/AppliedProject', projectController.AppliedProject);
+
+router.post('/projects/findProjectByEmail', projectController.findProjectByEmail);
 
 module.exports = router;
 
