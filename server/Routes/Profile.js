@@ -6,7 +6,7 @@ const{DeleteProfile,updateProfile,FindByEmail,updatePassword, updateProfilePictu
 
 
 
-router.delete("/deleteProfile",DeleteProfile);
+router.post("/deleteProfile",DeleteProfile);
 router.put("/updateProfile",updateProfile);
 router.post("/FindByEmail",FindByEmail)
 router.post("/updatePassword",updatePassword)

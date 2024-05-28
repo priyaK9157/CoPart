@@ -86,7 +86,7 @@ async function updatedProject (req, res)  {
   // Delete project
 async function deleteProject(req, res) {
     try {
-      const { projectId } = req.params;
+      const { projectId } = req.body;
      
       if (!projectId) {
         return res.status(400).json({
@@ -97,20 +97,22 @@ async function deleteProject(req, res) {
   
       // Find the project by ID
       const existingProject = await Project.findById(projectId);
-  
+
       if (!existingProject) {
         return res.status(404).json({
           success: false,
           message: "Project not found",
         });
       }
-
+      
+      const UserData=await User.findOne({profileInf:existingProject.profileId});
       // Remove the project ID from the user's projects array
-      User.projects = User.projects.filter((id) => id !== existingProject._id);
-      await User.save();
+      console.log(UserData)
+      UserData.Project = UserData.Project.filter((id) => id.toString() !== projectId);
+      await UserData.save();
   
       // Delete the project
-      await existingProject.remove();
+      await Project.deleteOne({ _id: projectId });
   
       return res.status(200).json({
         success: true,

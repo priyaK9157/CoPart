@@ -51,42 +51,59 @@ exports.updateProfile = async (req, res) => {
 
 
 // delete profile
-exports.DeleteProfile=async(req,res)=>{
-    try{
-    const{Email}=req.body
-     if(!Email){
-        return res.status(400).json({
-           success:false,
-           message:"All Field Are Required"
-        })
-     }
+exports.DeleteProfile = async (req, res) => {
+  try {
+      const { Email } = req.body;
+      if (!Email) {
+          return res.status(400).json({
+              success: false,
+              message: "All Fields Are Required"
+          });
+      }
 
-     // Profile  find
-     const userProfile=await Profile.findOne({Email:Email});
-    // user find
-    const userData=await User.findOne({profileInf:userProfile._id});
-    //project find
-    const ProjectData=await Project.findOne({userId:userData._id});
+      // Find the profile by email
+      const userProfile = await Profile.findOne({ Email: Email });
+      if (!userProfile) {
+          return res.status(404).json({
+              success: false,
+              message: "Profile not found"
+          });
+      }
 
-    // deleteing three
-    if(userProfile && userData && ProjectData){
-        await Profile.deleteOne({Email:Email});
-        await Project.deleteOne({userId:userData._id});
-        await User.deleteOne({profileInf:userProfile._id})
-    }
+      // Find the user by profile reference
+      const userData = await User.findOne({ profileInf: userProfile._id });
+      if (!userData) {
+          return res.status(404).json({
+              success: false,
+              message: "User not found"
+          });
+      }
 
+      // Find all projects by profile reference
+      const ProjectData = await Project.find({ profileId: userProfile._id });
 
-     return res.status(200).json({
-       success:true,
-       message:"Profile Will  Delete in 30 Days "
-     })
-    } catch(error){
-       return res.status(400).json({
-           message: "Error Occurred",
-           error: error,
-         });
-    }
-}
+      // Delete all projects associated with the user
+      if (ProjectData.length > 0) {
+          await Project.deleteMany({ profileId: userProfile._id });
+      }
+
+      // Delete user profile and user data
+      await Profile.deleteOne({ _id: userProfile._id });
+      await User.deleteOne({ _id: userData._id });
+
+      return res.status(200).json({
+          success: true,
+          message: "Profile will be deleted in 30 days"
+      });
+  } catch (error) {
+      return res.status(500).json({
+          success: false,
+          message: "An error occurred",
+          error: error.message
+      });
+  }
+};
+
 
 //update password
 exports.updatePassword=async(req,res)=>{

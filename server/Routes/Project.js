@@ -9,7 +9,7 @@ router.post('/projects/findProjectByProjectName', projectController.findProjectB
 
 router.put('/projects/updateProject', projectController.updatedProject);
 
-router.delete('/projects/deleteProject', projectController.deleteProject);
+router.post('/projects/deleteProject', projectController.deleteProject);
 
 router.get('/projects/listProjects', projectController.list);
 
